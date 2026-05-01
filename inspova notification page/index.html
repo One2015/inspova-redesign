@@ -122,7 +122,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 28px 24px 16px;
+      padding: 28px 16px 16px 24px;
       flex-shrink: 0;
     }
 
@@ -182,35 +182,7 @@
     /* 4% white on hover */
     .notif-item:hover { background: rgba(255,255,255,0.04); }
 
-    .notif-item.dismissing {
-      opacity: 0;
-      transform: translateX(-10px);
-      pointer-events: none;
-    }
-
-    /* Dismiss button — hidden until parent is hovered */
-    .notif-dismiss {
-      opacity: 0;
-      width: 22px; height: 22px;
-      border-radius: 50%;
-      background: transparent;
-      border: none;
-      color: #666;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: opacity 0.15s, background 0.12s;
-      padding: 0;
-    }
-    .notif-dismiss svg { width: 10px; height: 10px; pointer-events: none; }
-    /* 8% white on dismiss button hover */
-    .notif-dismiss:hover {
-      background: rgba(255,255,255,0.08);
-      color: #bbb;
-    }
-    .notif-item:hover .notif-dismiss { opacity: 1; }
-
-    .notif-icon {
+.notif-icon {
       width: 34px; height: 34px;
       border-radius: 50%;
       background: #1e1e1e;
@@ -266,19 +238,43 @@
     }
     .notif-dot.read { background: transparent; }
 
+    /* Stacked double thumbnails (campaign-style) */
+    .notif-thumb-stack {
+      position: relative;
+      width: 44px;
+      height: 42px;
+      flex-shrink: 0;
+    }
+    .notif-thumb-stack .notif-thumb {
+      position: absolute;
+      top: 0;
+      width: 32px;
+      border: 2px solid #111;
+    }
+    .notif-thumb-stack .notif-thumb:nth-child(1) {
+      left: 0;
+      z-index: 1;
+      transform: rotate(-4deg);
+    }
+    .notif-thumb-stack .notif-thumb:nth-child(2) {
+      left: 12px;
+      z-index: 2;
+      transform: rotate(4deg);
+    }
+
     /* Follow back button */
     .btn-follow-back {
       position: relative;
-      padding: 7px 14px;
+      padding: 8px 18px;
       border-radius: 20px;
-      border: 1px solid #7c6bb0;
-      background: transparent;
-      color: #a78bfa;
-      font-size: 12.5px;
+      border: none;
+      background: #c4b5fd;
+      color: #2e1065;
+      font-size: 13px;
       font-weight: 500;
       cursor: pointer;
       font-family: inherit;
-      transition: background 0.18s, border-color 0.18s, color 0.18s;
+      transition: background 0.18s, color 0.18s;
       white-space: nowrap;
       min-width: 90px;
       display: flex;
@@ -286,21 +282,20 @@
       justify-content: center;
       overflow: hidden;
     }
-    .btn-follow-back:not(.loading):not(.following):hover {
-      background: rgba(167, 139, 250, 0.12);
-      border-color: #a78bfa;
-    }
     .btn-follow-back.loading {
-      background: #7c3aed;
-      border-color: #7c3aed;
+      background: #c4b5fd;
       cursor: default;
       pointer-events: none;
     }
     .btn-follow-back.following {
-      border-color: #333;
-      color: #666;
       background: transparent;
-      cursor: default;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+    }
+    .btn-follow-back.following:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.3);
     }
 
     .btn-label { transition: opacity 0.15s; }
@@ -311,8 +306,8 @@
       position: absolute;
       display: none;
       width: 14px; height: 14px;
-      border: 2px solid rgba(255,255,255,0.25);
-      border-top-color: #fff;
+      border: 2px solid rgba(46, 16, 101, 0.2);
+      border-top-color: #2e1065;
       border-radius: 50%;
       animation: spin 0.65s linear infinite;
     }
@@ -747,9 +742,8 @@
         <div class="notif-sub">"Tokyo Street Vibes" · 2m</div>
       </div>
       <div class="notif-right">
-        <div class="notif-thumb"></div>
+        <div class="notif-thumb"><img class="thumb-img" src="" alt=""></div>
         <span class="notif-dot"></span>
-        <button class="notif-dismiss" aria-label="Dismiss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
     </div>
 
@@ -765,9 +759,8 @@
         <div class="notif-sub">+120 remixes today, keep it going · 1h</div>
       </div>
       <div class="notif-right">
-        <div class="notif-thumb"></div>
+        <div class="notif-thumb"><img class="thumb-img" src="" alt=""></div>
         <span class="notif-dot"></span>
-        <button class="notif-dismiss" aria-label="Dismiss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
     </div>
 
@@ -783,9 +776,11 @@
         <div class="notif-sub">Click it to explore more · 1h</div>
       </div>
       <div class="notif-right">
-        <div class="notif-thumb"></div>
+        <div class="notif-thumb-stack">
+          <div class="notif-thumb"><img class="thumb-img" src="" alt=""></div>
+          <div class="notif-thumb"><img class="thumb-img" src="" alt=""></div>
+        </div>
         <span class="notif-dot"></span>
-        <button class="notif-dismiss" aria-label="Dismiss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
     </div>
 
@@ -804,9 +799,8 @@
         <div class="notif-sub">just remixed your work · 10m</div>
       </div>
       <div class="notif-right">
-        <div class="notif-thumb"></div>
+        <div class="notif-thumb"><img class="thumb-img" src="" alt=""></div>
         <span class="notif-dot"></span>
-        <button class="notif-dismiss" aria-label="Dismiss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
     </div>
 
@@ -825,9 +819,8 @@
         <div class="notif-sub">Your remix has 50+ likes, 10+ saves · 1h</div>
       </div>
       <div class="notif-right">
-        <div class="notif-thumb"></div>
+        <div class="notif-thumb"><img class="thumb-img" src="" alt=""></div>
         <span class="notif-dot"></span>
-        <button class="notif-dismiss" aria-label="Dismiss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
     </div>
 
@@ -843,9 +836,8 @@
         <div class="notif-sub">jingwen saved your version to "inspo" · 1h</div>
       </div>
       <div class="notif-right">
-        <div class="notif-thumb"></div>
+        <div class="notif-thumb"><img class="thumb-img" src="" alt=""></div>
         <span class="notif-dot"></span>
-        <button class="notif-dismiss" aria-label="Dismiss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
     </div>
 
@@ -864,9 +856,7 @@
         <div class="notif-sub">@jingwen: love this vibe! · 1d</div>
       </div>
       <div class="notif-right">
-        <div class="notif-thumb"></div>
-        <span class="notif-dot"></span>
-        <button class="notif-dismiss" aria-label="Dismiss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <div class="notif-thumb"><img class="thumb-img" src="" alt=""></div>
       </div>
     </div>
 
@@ -887,8 +877,6 @@
           <span class="btn-spinner"></span>
           <span class="btn-label">Follow back</span>
         </button>
-        <span class="notif-dot"></span>
-        <button class="notif-dismiss" aria-label="Dismiss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
     </div>
 
@@ -1089,19 +1077,35 @@
     notifEmptyView.classList.add('show');
   });
 
-  // Follow back: default → loading → following
+  // Follow back: default → loading → following → (hover+click) → default
   const followBackBtn = document.getElementById('followBackBtn');
   followBackBtn.addEventListener('click', () => {
-    if (followBackBtn.classList.contains('loading') ||
-        followBackBtn.classList.contains('following')) return;
+    if (followBackBtn.classList.contains('loading')) return;
+
+    if (followBackBtn.classList.contains('following')) {
+      followBackBtn.classList.remove('following');
+      followBackBtn.style.border = '';
+      followBackBtn.querySelector('.btn-label').textContent = 'Follow back';
+      return;
+    }
 
     followBackBtn.classList.add('loading');
-
     setTimeout(() => {
       followBackBtn.classList.remove('loading');
       followBackBtn.classList.add('following');
       followBackBtn.querySelector('.btn-label').textContent = 'Following';
     }, 1600);
+  });
+
+  // Randomly assign images to thumbnails
+  const thumbImgs = ['imgs/1.png','imgs/2.png','imgs/3.png','imgs/4.png',
+                     'imgs/5.png','imgs/6.png','imgs/7.png','imgs/8.png'];
+  for (let i = thumbImgs.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [thumbImgs[i], thumbImgs[j]] = [thumbImgs[j], thumbImgs[i]];
+  }
+  document.querySelectorAll('.thumb-img').forEach((el, i) => {
+    el.src = thumbImgs[i % thumbImgs.length];
   });
 
   // Dismiss individual notifications
