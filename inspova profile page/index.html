@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inspova - Profile</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Left Sidebar ── */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 64px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0;
+      z-index: 10;
+    }
+
+    .sidebar-logo {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .sidebar-logo span {
+      width: 8px;
+      height: 8px;
+      background: #fff;
+      border-radius: 50%;
+    }
+
+    .sidebar-icons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .sidebar-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #888;
+      transition: color 0.2s;
+    }
+
+    .sidebar-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .sidebar-icon:hover {
+      color: #fff;
+    }
+
+    .sidebar-middle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .sidebar-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sidebar-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .sidebar-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ── Main Content ── */
+    .main {
+      margin-left: 64px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Profile Header ── */
+    .profile-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 72px 0 32px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 24px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      background: #1a1a1a;
+    }
+
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-name {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+
+    .profile-username {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 16px;
+    }
+
+    .profile-stats {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .profile-stats span {
+      color: #ccc;
+    }
+
+    .profile-stats strong {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .profile-bio {
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 28px;
+      text-decoration: line-through;
+    }
+
+    .profile-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-edit-profile {
+      padding: 10px 28px;
+      border-radius: 24px;
+      border: 1px solid #444;
+      background: transparent;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-edit-profile:hover {
+      border-color: #666;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .social-icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid #444;
+      background: transparent;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .social-icon-btn:hover {
+      border-color: #666;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .social-icon-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin: 12px 0 24px;
+      width: 100%;
+      max-width: 1200px;
+      justify-content: center;
+    }
+
+    .tab {
+      font-size: 15px;
+      font-weight: 500;
+      color: #666;
+      padding: 8px 16px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      background: none;
+      font-family: inherit;
+    }
+
+    .tab:hover {
+      color: #aaa;
+    }
+
+    .tab.active {
+      color: #fff;
+    }
+
+    /* ── Masonry Grid ── */
+    .masonry {
+      width: 100%;
+      max-width: 1300px;
+      padding: 0 24px 96px;
+      columns: 4;
+      column-gap: 12px;
+    }
+
+    .masonry-item {
+      break-inside: avoid;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .masonry-item img {
+      width: 100%;
+      display: block;
+      transition: transform 0.3s;
+    }
+
+    .masonry-item:hover img {
+      transform: scale(1.03);
+    }
+
+    /* Placeholder images with different aspect ratios */
+    .masonry-item .placeholder {
+      width: 100%;
+      display: block;
+    }
+
+    .placeholder-tall { aspect-ratio: 3/5; }
+    .placeholder-medium { aspect-ratio: 4/3; }
+    .placeholder-wide { aspect-ratio: 16/9; }
+    .placeholder-square { aspect-ratio: 1/1; }
+
+    /* ── Modal Overlay ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    /* ── Edit Profile Modal ── */
+    .modal {
+      background: #1a1a1a;
+      border-radius: 16px;
+      width: 560px;
+      max-width: 90vw;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 32px;
+      position: relative;
+    }
+
+    .modal::-webkit-scrollbar {
+      width: 0;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      left: 24px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #fff;
+      background: none;
+      border: none;
+      font-size: 20px;
+    }
+
+    .modal-close:hover {
+      opacity: 0.7;
+    }
+
+    .modal-title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .modal-avatar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    .modal-avatar-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      background: #333;
+    }
+
+    .modal-avatar-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .modal-avatar-edit {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 24px;
+      height: 24px;
+      background: #333;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #1a1a1a;
+    }
+
+    .modal-avatar-edit svg {
+      width: 12px;
+      height: 12px;
+      color: #fff;
+    }
+
+    /* ── Form Sections ── */
+    .form-section {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      padding: 12px 12px;
+      margin-bottom: 12px;
+    }
+
+    .form-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    .form-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      min-width: 100px;
+      padding-top: 8px;
+      white-space: nowrap;
+    }
+
+    .form-input-wrap {
+      flex: 1;
+    }
+
+    .form-input {
+      width: 100%;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-input::placeholder {
+      color: #666;
+    }
+
+    .form-input:focus {
+      border-color: rgba(255,255,255,0.25);
+    }
+
+    .form-input.error {
+      border-color: #e53935;
+    }
+
+    .form-input.error:focus {
+      border-color: #e53935;
+    }
+
+    .form-error {
+      font-size: 12px;
+      color: #e53935;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .form-error.visible {
+      display: block;
+    }
+
+    .char-count.error {
+      color: #e53935;
+    }
+
+    /* ── Username Suggestion Chips ── */
+    .suggestion-chips {
+      display: none;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .suggestion-chips.visible {
+      display: flex;
+    }
+
+    .suggestion-chip {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid #444;
+      background: transparent;
+      color: #ccc;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .suggestion-chip:hover {
+      border-color: #888;
+      color: #fff;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .form-hint {
+      font-size: 12px;
+      color: #666;
+      margin-top: 6px;
+    }
+
+    textarea.form-input {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .char-count {
+      text-align: right;
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    /* ── Social Links ── */
+    .social-links-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .social-link-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .drag-handle {
+      color: #555;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      user-select: none;
+      margin-right: 10px;
+    }
+
+    .drag-handle:active {
+      cursor: grabbing;
+    }
+
+    .social-link-row.dragging {
+      opacity: 0.4;
+    }
+
+    .social-link-row.drag-over {
+      border-top: 2px solid #888;
+    }
+
+    .drag-handle svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .social-link-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      flex-shrink: 0;
+      margin-right: 10px;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .social-link-icon.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .social-link-icon.hidden {
+      width: 0;
+      overflow: hidden;
+      margin: 0 !important;
+      padding: 0;
+    }
+
+    .social-link-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .drag-handle.hidden {
+      width: 0;
+      overflow: hidden;
+      pointer-events: none;
+      padding: 0;
+      margin: 0 !important;
+    }
+
+    .social-link-input {
+      flex: 1;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #666;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .social-link-input:focus {
+      border-color: #888;
+      color: #fff;
+    }
+
+    .add-link-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #888;
+      font-size: 13px;
+      cursor: pointer;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      font-family: inherit;
+      padding: 8px 14px;
+      width: 100%;
+    }
+
+    .add-link-btn:hover {
+      color: #fff;
+    }
+
+    .social-hint {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    /* ── Modal Footer ── */
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn-cancel {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: transparent;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .btn-cancel:hover {
+      border-color: #666;
+    }
+
+    .btn-save {
+      padding: 10px 24px;
+      border-radius: 8px;
+      border: none;
+      background: #444;
+      color: #888;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: default;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .btn-save.active {
+      background: #fff;
+      color: #000;
+      cursor: pointer;
+    }
+
+    .btn-save.active:hover {
+      background: #e0e0e0;
+    }
+
+    /* ── Bottom Input Bar ── */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 64px;
+      right: 0;
+      padding: 12px 24px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.9) 30%);
+      z-index: 50;
+      display: flex;
+      justify-content: center;
+    }
+
+    .input-bar {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 28px;
+      padding: 10px 12px 10px 16px;
+    }
+
+    .input-bar-add {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: #333;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .input-bar-add:hover {
+      background: #444;
+    }
+
+    .input-bar-add svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .input-bar-field {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .input-bar-field::placeholder {
+      color: #666;
+    }
+
+    .input-bar-kbd {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #333;
+      color: #888;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: inherit;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .input-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .input-bar-auto {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .input-bar-auto:hover {
+      color: #fff;
+    }
+
+    .input-bar-auto svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .input-bar-send {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid #444;
+      background: transparent;
+      color: #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .input-bar-send:hover {
+      border-color: #666;
+      color: #fff;
+    }
+
+    .input-bar-send svg {
+      width: 16px;
+      height: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Left Sidebar ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <div class="sidebar-middle">
+      <div class="sidebar-icon" title="Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 20h16a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          <path d="M2 10h20"/>
+        </svg>
+      </div>
+      <div class="sidebar-icon" title="Create">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+      </div>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="sidebar-avatar">
+        <img src="https://placehold.co/64x64/2a5a3a/ffffff?text=L" alt="avatar">
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main Content ── -->
+  <main class="main">
+    <!-- Profile Header -->
+    <section class="profile-header">
+      <div class="profile-avatar">
+        <img src="https://placehold.co/240x240/2a5a3a/ffffff?text=Lena" alt="Lena">
+      </div>
+      <h1 class="profile-name" id="profileNameDisplay">Lena</h1>
+      <p class="profile-username" id="profileUsernameDisplay">@zhenglinyi0_47841</p>
+      <div class="profile-stats">
+        <span><strong>11</strong> Followers</span>
+        <span><strong>11</strong> Following</span>
+        <span><strong>11</strong> Remixes</span>
+      </div>
+      <p class="profile-bio">She her her</p>
+      <div class="profile-actions">
+        <button class="btn-edit-profile" id="openModal">Edit Profile</button>
+        <!-- TikTok -->
+        <button class="social-icon-btn" title="TikTok">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V8.71a8.2 8.2 0 004.76 1.52V6.78a4.84 4.84 0 01-1-.09z"/>
+          </svg>
+        </button>
+        <!-- Instagram -->
+        <button class="social-icon-btn" title="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="5"/>
+            <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+        <!-- Threads -->
+        <button class="social-icon-btn" title="Threads">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.186 24h-.007C5.965 24 2.615 20.178 2.615 14.748v-.498C2.615 8.15 6.046 4 12.237 4c5.88 0 9.168 3.651 9.168 8.634 0 4.258-2.33 6.694-5.297 6.694-1.39 0-2.489-.623-2.894-1.788h-.077c-.57 1.088-1.658 1.67-3.085 1.67-2.372 0-3.96-1.878-3.96-4.668 0-2.955 1.762-5.062 4.34-5.062 1.207 0 2.15.507 2.594 1.384h.076l.233-1.166h2.486l-1.125 5.86c-.314 1.614-.033 2.297.84 2.297 1.369 0 2.778-1.372 2.778-4.637C18.32 8.874 15.942 6.1 12.16 6.1c-4.443 0-7.478 3.2-7.478 8.182v.434c0 4.335 2.48 7.213 6.5 7.213 1.654 0 3.078-.363 4.228-1.08l.857 1.9C14.928 23.545 13.32 24 12.186 24z"/>
+          </svg>
+        </button>
+        <!-- Share -->
+        <button class="social-icon-btn" title="Share">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/>
+            <polyline points="16 6 12 2 8 6"/>
+            <line x1="12" y1="2" x2="12" y2="15"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active">All</button>
+      <button class="tab">Collection</button>
+      <button class="tab">Element</button>
+      <button class="tab">Skill</button>
+    </div>
+
+    <!-- Masonry Grid -->
+    <div class="masonry">
+      <!-- Column 1 items -->
+      <div class="masonry-item">
+        <div class="placeholder placeholder-tall" style="background: linear-gradient(135deg, #2a3a5c, #c4956a); display:flex; align-items:center; justify-content:center;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"><rect x="2" y="2" width="20" height="20" rx="4"/><circle cx="8" cy="8" r="2"/><path d="M22 15l-5-5L2 22"/></svg>
+        </div>
+      </div>
+      <div class="masonry-item">
+        <div class="placeholder placeholder-medium" style="background: linear-gradient(135deg, #5c3a2a, #c49a6a);">
+        </div>
+      </div>
+
+      <!-- Column 2 items -->
+      <div class="masonry-item">
+        <div class="placeholder placeholder-medium" style="background: linear-gradient(135deg, #8b4a3a, #e8a87c); display:flex; align-items:center; justify-content:center;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"><rect x="2" y="2" width="20" height="20" rx="4"/><circle cx="8" cy="8" r="2"/><path d="M22 15l-5-5L2 22"/></svg>
+        </div>
+      </div>
+      <div class="masonry-item">
+        <div class="placeholder placeholder-square" style="background: linear-gradient(135deg, #e8dcc8, #c4a87c);">
+        </div>
+      </div>
+      <div class="masonry-item">
+        <div class="placeholder placeholder-medium" style="background: linear-gradient(135deg, #3a5a4a, #7aaa8c);">
+        </div>
+      </div>
+
+      <!-- Column 3 items -->
+      <div class="masonry-item">
+        <div class="placeholder" style="aspect-ratio: 3/4; background: linear-gradient(135deg, #3a6a3a, #8aba7c); display:flex; align-items:center; justify-content:center;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"><rect x="2" y="2" width="20" height="20" rx="4"/><circle cx="8" cy="8" r="2"/><path d="M22 15l-5-5L2 22"/></svg>
+        </div>
+      </div>
+      <div class="masonry-item">
+        <div class="placeholder placeholder-medium" style="background: linear-gradient(135deg, #4a5a7c, #8aaace);">
+        </div>
+      </div>
+
+      <!-- Column 4 items -->
+      <div class="masonry-item">
+        <div class="placeholder placeholder-tall" style="background: linear-gradient(135deg, #2a3a5c, #6a8abc); display:flex; align-items:center; justify-content:center;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"><rect x="2" y="2" width="20" height="20" rx="4"/><circle cx="8" cy="8" r="2"/><path d="M22 15l-5-5L2 22"/></svg>
+        </div>
+      </div>
+      <div class="masonry-item">
+        <div class="placeholder placeholder-medium" style="background: linear-gradient(135deg, #3a6a8a, #7ac8ea);">
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── Bottom Input Bar ── -->
+  <div class="bottom-bar">
+    <div class="input-bar">
+      <button class="input-bar-add">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </button>
+      <input type="text" class="input-bar-field" placeholder="Type your idea or press    for commands">
+      <span class="input-bar-kbd">&amp;</span>
+      <div class="input-bar-right">
+        <button class="input-bar-auto">
+          Auto
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <button class="input-bar-send">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"/>
+            <polyline points="5 12 12 5 19 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Edit Profile Modal ── -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <button class="modal-close" id="closeModal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <h2 class="modal-title">Edit Profile</h2>
+
+      <div class="modal-avatar">
+        <div class="modal-avatar-img">
+          <img src="https://placehold.co/160x160/2a5a3a/ffffff?text=L" alt="avatar">
+          <div class="modal-avatar-edit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Name -->
+      <div class="form-section">
+        <div class="form-row">
+          <label class="form-label">Profile Name</label>
+          <div class="form-input-wrap">
+            <input type="text" class="form-input" id="profileName" placeholder="Your display name" maxlength="30">
+            <p class="form-error" id="profileNameError"></p>
+            <p class="form-hint">2–30 characters · letters, numbers, spaces, and hyphens</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Username -->
+      <div class="form-section">
+        <div class="form-row">
+          <label class="form-label">Username</label>
+          <div class="form-input-wrap">
+            <input type="text" class="form-input" id="username" placeholder="@yourusername" maxlength="30">
+            <p class="form-error" id="usernameError"></p>
+            <div class="suggestion-chips" id="suggestionChips"></div>
+            <p class="form-hint" id="usernameHint">3–30 characters · letters, numbers, and underscores</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bio -->
+      <div class="form-section">
+        <div class="form-row">
+          <label class="form-label">Bio</label>
+          <div class="form-input-wrap">
+            <textarea class="form-input" id="bio" placeholder="Write something about yourself." maxlength="200"></textarea>
+            <p class="form-error" id="bioError">Bio cannot exceed 200 characters.</p>
+            <p class="char-count" id="charCountWrap"><span id="charCount">0</span>/200</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social Links -->
+      <div class="form-section">
+        <div class="form-row">
+          <label class="form-label">Social Links</label>
+          <div class="social-links-list" id="socialLinksList">
+            <div class="social-link-row">
+              <div class="drag-handle hidden">
+                <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+              </div>
+              <div class="social-link-icon hidden"></div>
+              <input type="text" class="social-link-input" placeholder="Paste a link (e.g. tiktok.com/yourname)">
+            </div>
+            <div class="social-link-row">
+              <div class="drag-handle hidden">
+                <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+              </div>
+              <div class="social-link-icon hidden"></div>
+              <input type="text" class="social-link-input" placeholder="Paste a link (e.g. instagram.com/yourname)">
+            </div>
+            <!-- Add link -->
+            <button class="add-link-btn" id="addLinkBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add link
+            </button>
+            <p class="social-hint">Add up to 5 social media link or personal website.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button class="btn-cancel" id="cancelBtn">Cancel</button>
+        <button class="btn-save" id="saveBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Modal open/close
+    const overlay = document.getElementById('modalOverlay');
+    const openBtn = document.getElementById('openModal');
+    const closeBtn = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    openBtn.addEventListener('click', () => overlay.classList.add('active'));
+    closeBtn.addEventListener('click', () => overlay.classList.remove('active'));
+    cancelBtn.addEventListener('click', () => overlay.classList.remove('active'));
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) overlay.classList.remove('active');
+    });
+
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    // Elements
+    const bio = document.getElementById('bio');
+    const charCount = document.getElementById('charCount');
+    const charCountWrap = document.getElementById('charCountWrap');
+    const profileName = document.getElementById('profileName');
+    const username = document.getElementById('username');
+    const saveBtn = document.getElementById('saveBtn');
+    const profileNameError = document.getElementById('profileNameError');
+    const usernameError = document.getElementById('usernameError');
+    const bioError = document.getElementById('bioError');
+    const suggestionChips = document.getElementById('suggestionChips');
+    const usernameHint = document.getElementById('usernameHint');
+    const socialLinksList = document.getElementById('socialLinksList');
+    const addLinkBtn = document.getElementById('addLinkBtn');
+
+    // Simulated taken usernames
+    const takenUsernames = ['lena', 'inspova', 'admin', 'test'];
+
+    function clearError(input, errorEl) {
+      input.classList.remove('error');
+      errorEl.classList.remove('visible');
+      errorEl.textContent = '';
+    }
+
+    function showError(input, errorEl, msg) {
+      input.classList.add('error');
+      errorEl.textContent = msg;
+      errorEl.classList.add('visible');
+    }
+
+    // ── Validation rules ──
+    const usernameRegex  = /^[a-zA-Z0-9_]+$/;
+    const profileNameRegex = /^[a-zA-Z0-9\s\-]+$/;
+
+    function validateUsername(val) {
+      if (val.length === 0)          return 'Please enter a username.';
+      if (val.length < 3)            return 'Username must be at least 3 characters.';
+      if (!usernameRegex.test(val))  return 'Only letters, numbers, and underscores are allowed.';
+      if (val.startsWith('_'))       return 'Username cannot start with an underscore.';
+      if (val.endsWith('_'))         return 'Username cannot end with an underscore.';
+      if (takenUsernames.includes(val.toLowerCase())) return `@${val} is already taken. Try another one.`;
+      return null;
+    }
+
+    function validateProfileName(val) {
+      const trimmed = val.trim();
+      if (trimmed.length === 0)              return 'Please enter your profile name.';
+      if (trimmed.length < 2)               return 'Profile name must be at least 2 characters.';
+      if (trimmed.length > 30)              return 'Profile name cannot exceed 30 characters.';
+      if (!profileNameRegex.test(trimmed))  return 'Only letters, numbers, spaces, and hyphens are allowed.';
+      return null;
+    }
+
+    function generateSuggestions(name) {
+      const clean = name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+      suggestionChips.innerHTML = '';
+      const suggestions = [`${clean}_01`, `hey_${clean}`, `the_${clean}`];
+      suggestions.forEach(s => {
+        const chip = document.createElement('button');
+        chip.className = 'suggestion-chip';
+        chip.textContent = `@${s}`;
+        chip.addEventListener('click', () => {
+          username.value = s;
+          clearError(username, usernameError);
+          suggestionChips.classList.remove('visible');
+          usernameHint.textContent = `3–30 characters · letters, numbers, and underscores · cannot start or end with _`;
+          validateForm();
+        });
+        suggestionChips.appendChild(chip);
+      });
+      suggestionChips.classList.add('visible');
+    }
+
+    const profileUsernameDisplay = document.getElementById('profileUsernameDisplay');
+
+    username.addEventListener('input', () => {
+      const val = username.value;
+      suggestionChips.classList.remove('visible');
+
+      profileUsernameDisplay.textContent = val.trim().length > 0 ? `@${val}` : '@zhenglinyi0_47841';
+
+      const err = validateUsername(val);
+      if (err) {
+        showError(username, usernameError, err);
+        if (val.length > 0 && takenUsernames.includes(val.toLowerCase())) {
+          generateSuggestions(val);
+        }
+      } else {
+        clearError(username, usernameError);
+      }
+      validateForm();
+    });
+
+    const profileNameDisplay = document.getElementById('profileNameDisplay');
+
+    // Profile name validation
+    profileName.addEventListener('input', () => {
+      profileNameDisplay.textContent = profileName.value.trim().length > 0 ? profileName.value.trim() : 'Lena';
+      const err = validateProfileName(profileName.value);
+      if (err && profileName.value.length > 0) {
+        showError(profileName, profileNameError, err);
+      } else {
+        clearError(profileName, profileNameError);
+      }
+      validateForm();
+    });
+
+    // Bio character count + validation
+    bio.addEventListener('input', () => {
+      const len = bio.value.length;
+      charCount.textContent = len;
+
+      if (len >= 200) {
+        charCountWrap.classList.add('error');
+        showError(bio, bioError, 'Bio cannot exceed 200 characters.');
+      } else if (len >= 180) {
+        charCountWrap.classList.add('error');
+        clearError(bio, bioError);
+      } else {
+        charCountWrap.classList.remove('error');
+        clearError(bio, bioError);
+      }
+      validateForm();
+    });
+
+    // Save button activation
+    function validateForm() {
+      const nameValid = validateProfileName(profileName.value) === null;
+      const uValid    = validateUsername(username.value) === null;
+      const bioValid  = bio.value.length <= 200;
+
+      if (nameValid && uValid && bioValid) {
+        saveBtn.classList.add('active');
+      } else {
+        saveBtn.classList.remove('active');
+      }
+    }
+
+    // Save handler — force-show errors on all fields if invalid
+    saveBtn.addEventListener('click', () => {
+      if (!saveBtn.classList.contains('active')) {
+        const nameErr = validateProfileName(profileName.value);
+        if (nameErr) showError(profileName, profileNameError, nameErr);
+
+        const uErr = validateUsername(username.value);
+        if (uErr) {
+          showError(username, usernameError, uErr);
+          if (username.value.length > 0 && takenUsernames.includes(username.value.toLowerCase())) {
+            generateSuggestions(username.value);
+          }
+        }
+        return;
+      }
+      overlay.classList.remove('active');
+    });
+
+    // ── Social Links: auto-detect platform icon ──
+    const socialPlatforms = {
+      tiktok:    { match: /tiktok\.com/i, svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V8.71a8.2 8.2 0 004.76 1.52V6.78a4.84 4.84 0 01-1-.09z"/></svg>' },
+      instagram: { match: /instagram\.com/i, svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>' },
+      threads:   { match: /threads\.net/i, svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007C5.965 24 2.615 20.178 2.615 14.748v-.498C2.615 8.15 6.046 4 12.237 4c5.88 0 9.168 3.651 9.168 8.634 0 4.258-2.33 6.694-5.297 6.694-1.39 0-2.489-.623-2.894-1.788h-.077c-.57 1.088-1.658 1.67-3.085 1.67-2.372 0-3.96-1.878-3.96-4.668 0-2.955 1.762-5.062 4.34-5.062 1.207 0 2.15.507 2.594 1.384h.076l.233-1.166h2.486l-1.125 5.86c-.314 1.614-.033 2.297.84 2.297 1.369 0 2.778-1.372 2.778-4.637C18.32 8.874 15.942 6.1 12.16 6.1c-4.443 0-7.478 3.2-7.478 8.182v.434c0 4.335 2.48 7.213 6.5 7.213 1.654 0 3.078-.363 4.228-1.08l.857 1.9C14.928 23.545 13.32 24 12.186 24z"/></svg>' },
+      twitter:   { match: /twitter\.com|x\.com/i, svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>' },
+      youtube:   { match: /youtube\.com|youtu\.be/i, svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>' },
+      linkedin:  { match: /linkedin\.com/i, svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>' },
+      website:   { match: /^https?:\/\//i, svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>' },
+    };
+
+    function detectPlatform(url) {
+      for (const [name, platform] of Object.entries(socialPlatforms)) {
+        if (name === 'website') continue; // check last
+        if (platform.match.test(url)) return platform;
+      }
+      if (socialPlatforms.website.match.test(url)) return socialPlatforms.website;
+      return null;
+    }
+
+    function setupSocialInput(input) {
+      const row = input.closest('.social-link-row');
+      const iconEl = row.querySelector('.social-link-icon');
+      const dragEl = row.querySelector('.drag-handle');
+      let currentPlatform = null;
+
+      input.addEventListener('input', () => {
+        const val = input.value.trim();
+        const platform = detectPlatform(val);
+
+        if (platform && platform !== currentPlatform) {
+          currentPlatform = platform;
+          iconEl.innerHTML = platform.svg;
+          iconEl.classList.remove('hidden');
+          // Trigger animation on next frame
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              iconEl.classList.add('visible');
+            });
+          });
+          dragEl.classList.remove('hidden');
+          input.style.color = '#fff';
+        } else if (!platform && val.length === 0) {
+          currentPlatform = null;
+          iconEl.classList.remove('visible');
+          setTimeout(() => {
+            iconEl.innerHTML = '';
+            iconEl.classList.add('hidden');
+            dragEl.classList.add('hidden');
+          }, 300);
+          input.style.color = '';
+        }
+      });
+    }
+
+    // Init existing social inputs
+    document.querySelectorAll('.social-link-input').forEach(setupSocialInput);
+
+    // Add link button
+    addLinkBtn.addEventListener('click', () => {
+      const rows = socialLinksList.querySelectorAll('.social-link-row');
+      if (rows.length >= 5) return;
+
+      const newRow = document.createElement('div');
+      newRow.className = 'social-link-row';
+      newRow.innerHTML = `
+        <div class="drag-handle hidden">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+        </div>
+        <div class="social-link-icon hidden"></div>
+        <input type="text" class="social-link-input" placeholder="Paste a link">
+      `;
+      socialLinksList.insertBefore(newRow, addLinkBtn);
+      setupSocialInput(newRow.querySelector('.social-link-input'));
+      initDrag();
+
+      if (socialLinksList.querySelectorAll('.social-link-row').length >= 5) {
+        addLinkBtn.style.display = 'none';
+      }
+    });
+
+    // Drag & drop for social links
+    let dragItem = null;
+
+    function initDrag() {
+      document.querySelectorAll('.social-link-row').forEach(row => {
+        row.setAttribute('draggable', 'true');
+
+        row.ondragstart = (e) => {
+          dragItem = row;
+          row.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        };
+
+        row.ondragend = () => {
+          row.classList.remove('dragging');
+          document.querySelectorAll('.social-link-row').forEach(r => r.classList.remove('drag-over'));
+          dragItem = null;
+        };
+
+        row.ondragover = (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          if (row !== dragItem) row.classList.add('drag-over');
+        };
+
+        row.ondragleave = () => {
+          row.classList.remove('drag-over');
+        };
+
+        row.ondrop = (e) => {
+          e.preventDefault();
+          row.classList.remove('drag-over');
+          if (row !== dragItem && dragItem) {
+            const list = row.parentNode;
+            const rows = [...list.querySelectorAll('.social-link-row')];
+            const fromIdx = rows.indexOf(dragItem);
+            const toIdx = rows.indexOf(row);
+            if (fromIdx < toIdx) {
+              list.insertBefore(dragItem, row.nextSibling);
+            } else {
+              list.insertBefore(dragItem, row);
+            }
+          }
+        };
+      });
+    }
+
+    initDrag();
+  </script>
+</body>
+</html>
