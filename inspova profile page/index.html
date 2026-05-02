@@ -1189,12 +1189,7 @@
       profileUsernameDisplay.textContent = val.trim().length > 0 ? `@${val}` : '@zhenglinyi0_47841';
 
       const err = validateUsername(val);
-      if (err) {
-        showError(username, usernameError, err);
-        if (val.length > 0 && takenUsernames.includes(val.toLowerCase())) {
-          generateSuggestions(val);
-        }
-      } else {
+      if (!err) {
         clearError(username, usernameError);
       }
       validateForm();
@@ -1206,9 +1201,7 @@
     profileName.addEventListener('input', () => {
       profileNameDisplay.textContent = profileName.value.trim().length > 0 ? profileName.value.trim() : 'Lena';
       const err = validateProfileName(profileName.value);
-      if (err && profileName.value.length > 0) {
-        showError(profileName, profileNameError, err);
-      } else {
+      if (!err) {
         clearError(profileName, profileNameError);
       }
       validateForm();
