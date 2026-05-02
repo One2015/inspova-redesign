@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/inspova profile page/index.html" }
+  ]
+}
