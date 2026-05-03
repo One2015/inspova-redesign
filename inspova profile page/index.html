@@ -834,48 +834,93 @@
     .stat-btn:hover { color: #fff; }
     .stat-btn strong { color: #fff; font-weight: 600; }
 
-    /* ── User list modal ── */
+    /* ── User list modal (TikTok-style) ── */
     .user-list-modal {
-      width: 440px;
+      width: 480px;
+      height: 82vh;
       padding: 0;
+      display: flex;
+      flex-direction: column;
     }
-    .user-list-modal .modal-title {
-      padding: 24px 24px 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+    .user-list-header {
+      padding: 20px 20px 0;
+      flex-shrink: 0;
     }
     .user-list-modal .modal-close {
-      top: 18px;
+      top: 16px;
+    }
+    .user-list-modal .modal-title {
+      text-align: center;
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      padding: 0;
+    }
+    .user-list-tabs {
+      display: flex;
+      margin: 0 -20px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .user-list-tab {
+      flex: 1;
+      padding: 10px 8px 12px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 500;
+      color: #555;
+      background: none;
+      border: none;
+      font-family: inherit;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .user-list-tab.active {
+      color: #fff;
+      font-weight: 600;
+    }
+    .user-list-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 55%;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
     }
     .user-list {
       overflow-y: auto;
-      max-height: 56vh;
-      padding: 8px 0;
+      flex: 1;
+      padding: 6px 0 16px;
     }
     .user-list::-webkit-scrollbar { width: 0; }
     .user-row {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       padding: 10px 20px;
       transition: background 0.15s;
     }
     .user-row:hover { background: rgba(255,255,255,0.03); }
     .user-avatar-sm {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 600;
       color: #fff;
       flex-shrink: 0;
     }
     .user-info { flex: 1; min-width: 0; }
     .user-name {
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 15px;
+      font-weight: 600;
       color: #fff;
       white-space: nowrap;
       overflow: hidden;
@@ -884,20 +929,23 @@
     .user-username {
       font-size: 12px;
       color: #555;
+      margin-top: 2px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     .btn-follow-action {
-      padding: 6px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
+      width: 112px;
+      padding: 8px 0;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
       font-family: inherit;
       cursor: pointer;
       transition: all 0.2s;
       white-space: nowrap;
       flex-shrink: 0;
+      text-align: center;
     }
     .btn-follow-action.follow-back {
       background: #fff;
@@ -906,13 +954,13 @@
     }
     .btn-follow-action.follow-back:hover { background: #e0e0e0; }
     .btn-follow-action.following {
-      background: transparent;
-      color: #aaa;
-      border: 1px solid #444;
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border: none;
     }
     .btn-follow-action.following:hover {
-      border-color: #c62828;
-      color: #c62828;
+      background: rgba(200,40,40,0.18);
+      color: #e57373;
     }
   </style>
 </head>
@@ -1083,12 +1131,18 @@
   <!-- ── Followers / Following Modal ── -->
   <div class="modal-overlay" id="userListOverlay">
     <div class="modal user-list-modal">
-      <button class="modal-close" id="closeUserList">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
-      <h2 class="modal-title" id="userListTitle">Followers</h2>
+      <div class="user-list-header">
+        <button class="modal-close" id="closeUserList">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+        <h2 class="modal-title" id="userListTitle">Lena</h2>
+        <div class="user-list-tabs">
+          <button class="user-list-tab" id="tabFollowing">Following <span id="tabFollowingCount">11</span></button>
+          <button class="user-list-tab" id="tabFollowers">Followers <span id="tabFollowersCount">11</span></button>
+        </div>
+      </div>
       <div class="user-list" id="userList"></div>
     </div>
   </div>
@@ -1496,12 +1550,11 @@
     initDrag();
 
     // ── Followers / Following modal ──
-    const userListOverlay = document.getElementById('userListOverlay');
-    const userListTitle   = document.getElementById('userListTitle');
-    const userListEl      = document.getElementById('userList');
-    const closeUserList   = document.getElementById('closeUserList');
-
-    const avatarColors = ['#2a5a3a','#3a5a8a','#5a3a8a','#8a3a5a','#3a8a5a','#8a5a3a','#4a6a7a','#6a4a4a'];
+    const userListOverlay  = document.getElementById('userListOverlay');
+    const userListEl       = document.getElementById('userList');
+    const closeUserList    = document.getElementById('closeUserList');
+    const tabFollowing     = document.getElementById('tabFollowing');
+    const tabFollowers     = document.getElementById('tabFollowers');
 
     const mockFollowers = [
       { id:1, name:'Alex Chen',    username:'alexchen',  initials:'AC', color:'#2a3a5c', youFollow:false },
@@ -1513,54 +1566,64 @@
     ];
 
     const mockFollowing = [
-      { id:1, name:'Chris Park',   username:'chrisp',    initials:'CP', color:'#3a5c3a', youFollow:true },
-      { id:2, name:'Jamie Wilson', username:'jamiew',    initials:'JW', color:'#6a4a6a', youFollow:true },
-      { id:3, name:'Robin Scott',  username:'robins',    initials:'RS', color:'#4a4a6a', youFollow:true },
-      { id:4, name:'Morgan Davis', username:'morgand',   initials:'MD', color:'#6a6a3a', youFollow:true },
+      { id:1, name:'Chris Park',   username:'chrisp',    initials:'CP', color:'#3a5c3a', youFollow:true, theyFollow:true  },
+      { id:2, name:'Jamie Wilson', username:'jamiew',    initials:'JW', color:'#6a4a6a', youFollow:true, theyFollow:false },
+      { id:3, name:'Robin Scott',  username:'robins',    initials:'RS', color:'#4a4a6a', youFollow:true, theyFollow:true  },
+      { id:4, name:'Morgan Davis', username:'morgand',   initials:'MD', color:'#6a6a3a', youFollow:true, theyFollow:false },
     ];
+
+    let currentListMode = 'followers';
+
+    function getFollowBtn(user, mode) {
+      if (mode === 'followers') {
+        return user.youFollow
+          ? { label: 'Following', cls: 'following' }
+          : { label: 'Follow back', cls: 'follow-back' };
+      }
+      if (user.youFollow && user.theyFollow)  return { label: 'Friends',     cls: 'following'  };
+      if (user.youFollow && !user.theyFollow) return { label: 'Following',   cls: 'following'  };
+      if (!user.youFollow && user.theyFollow) return { label: 'Follow back', cls: 'follow-back' };
+      return { label: 'Follow', cls: 'follow-back' };
+    }
 
     function renderUserList(users, mode) {
       userListEl.innerHTML = '';
       users.forEach(user => {
+        const { label, cls } = getFollowBtn(user, mode);
         const row = document.createElement('div');
         row.className = 'user-row';
-
-        const isFollowing = user.youFollow;
-
-        let btnLabel, btnClass;
-        if (mode === 'followers') {
-          btnLabel = isFollowing ? 'Following' : 'Follow back';
-          btnClass = isFollowing ? 'following' : 'follow-back';
-        } else {
-          btnLabel = 'Following';
-          btnClass = 'following';
-        }
-
         row.innerHTML = `
           <div class="user-avatar-sm" style="background:${user.color}">${user.initials}</div>
           <div class="user-info">
             <p class="user-name">${user.name}</p>
             <p class="user-username">@${user.username}</p>
           </div>
-          <button class="btn-follow-action ${btnClass}" data-id="${user.id}" data-mode="${mode}">${btnLabel}</button>
+          <button class="btn-follow-action ${cls}" data-id="${user.id}">${label}</button>
         `;
-
         row.querySelector('.btn-follow-action').addEventListener('click', function() {
           const target = users.find(u => u.id === Number(this.dataset.id));
           if (!target) return;
           target.youFollow = !target.youFollow;
           renderUserList(users, mode);
         });
-
         userListEl.appendChild(row);
       });
     }
 
-    function openUserList(mode) {
-      userListTitle.textContent = mode === 'followers' ? 'Followers' : 'Following';
+    function switchTab(mode) {
+      currentListMode = mode;
+      tabFollowing.classList.toggle('active', mode === 'following');
+      tabFollowers.classList.toggle('active', mode === 'followers');
       renderUserList(mode === 'followers' ? mockFollowers : mockFollowing, mode);
+    }
+
+    function openUserList(mode) {
+      switchTab(mode);
       userListOverlay.classList.add('active');
     }
+
+    tabFollowing.addEventListener('click', () => switchTab('following'));
+    tabFollowers.addEventListener('click', () => switchTab('followers'));
 
     document.getElementById('openFollowers').addEventListener('click', () => openUserList('followers'));
     document.getElementById('openFollowing').addEventListener('click', () => openUserList('following'));
