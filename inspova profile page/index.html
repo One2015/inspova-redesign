@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inspova - Profile</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -818,6 +819,101 @@
       width: 16px;
       height: 16px;
     }
+
+    /* ── Clickable stat buttons ── */
+    .stat-btn {
+      background: none;
+      border: none;
+      color: #ccc;
+      font-size: 14px;
+      font-family: inherit;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.2s;
+    }
+    .stat-btn:hover { color: #fff; }
+    .stat-btn strong { color: #fff; font-weight: 600; }
+
+    /* ── User list modal ── */
+    .user-list-modal {
+      width: 440px;
+      padding: 0;
+    }
+    .user-list-modal .modal-title {
+      padding: 24px 24px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .user-list-modal .modal-close {
+      top: 18px;
+    }
+    .user-list {
+      overflow-y: auto;
+      max-height: 56vh;
+      padding: 8px 0;
+    }
+    .user-list::-webkit-scrollbar { width: 0; }
+    .user-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      transition: background 0.15s;
+    }
+    .user-row:hover { background: rgba(255,255,255,0.03); }
+    .user-avatar-sm {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .user-info { flex: 1; min-width: 0; }
+    .user-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .user-username {
+      font-size: 12px;
+      color: #555;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .btn-follow-action {
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-follow-action.follow-back {
+      background: #fff;
+      color: #000;
+      border: none;
+    }
+    .btn-follow-action.follow-back:hover { background: #e0e0e0; }
+    .btn-follow-action.following {
+      background: transparent;
+      color: #aaa;
+      border: 1px solid #444;
+    }
+    .btn-follow-action.following:hover {
+      border-color: #c62828;
+      color: #c62828;
+    }
   </style>
 </head>
 <body>
@@ -858,9 +954,9 @@
       <h1 class="profile-name" id="profileNameDisplay">Lena</h1>
       <p class="profile-username" id="profileUsernameDisplay">@zhenglinyi0_47841</p>
       <div class="profile-stats">
-        <span><strong>11</strong> Followers</span>
-        <span><strong>11</strong> Following</span>
         <span><strong>11</strong> Remixes</span>
+        <button class="stat-btn" id="openFollowers"><strong>11</strong> Followers</button>
+        <button class="stat-btn" id="openFollowing"><strong>11</strong> Following</button>
       </div>
       <p class="profile-bio">She her her</p>
       <div class="profile-actions">
@@ -981,6 +1077,19 @@
           </svg>
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- ── Followers / Following Modal ── -->
+  <div class="modal-overlay" id="userListOverlay">
+    <div class="modal user-list-modal">
+      <button class="modal-close" id="closeUserList">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <h2 class="modal-title" id="userListTitle">Followers</h2>
+      <div class="user-list" id="userList"></div>
     </div>
   </div>
 
@@ -1385,6 +1494,80 @@
     }
 
     initDrag();
+
+    // ── Followers / Following modal ──
+    const userListOverlay = document.getElementById('userListOverlay');
+    const userListTitle   = document.getElementById('userListTitle');
+    const userListEl      = document.getElementById('userList');
+    const closeUserList   = document.getElementById('closeUserList');
+
+    const avatarColors = ['#2a5a3a','#3a5a8a','#5a3a8a','#8a3a5a','#3a8a5a','#8a5a3a','#4a6a7a','#6a4a4a'];
+
+    const mockFollowers = [
+      { id:1, name:'Alex Chen',    username:'alexchen',  initials:'AC', color:'#2a3a5c', youFollow:false },
+      { id:2, name:'Maya Patel',   username:'mayap_',    initials:'MP', color:'#5a3a8a', youFollow:true  },
+      { id:3, name:'Jordan Lee',   username:'jordanlee', initials:'JL', color:'#8a3a5a', youFollow:false },
+      { id:4, name:'Sam Rivera',   username:'samrivera', initials:'SR', color:'#3a8a5a', youFollow:true  },
+      { id:5, name:'Taylor Kim',   username:'taylork',   initials:'TK', color:'#8a5a3a', youFollow:false },
+      { id:6, name:'Priya Sharma', username:'priyas',    initials:'PS', color:'#4a6a7a', youFollow:false },
+    ];
+
+    const mockFollowing = [
+      { id:1, name:'Chris Park',   username:'chrisp',    initials:'CP', color:'#3a5c3a', youFollow:true },
+      { id:2, name:'Jamie Wilson', username:'jamiew',    initials:'JW', color:'#6a4a6a', youFollow:true },
+      { id:3, name:'Robin Scott',  username:'robins',    initials:'RS', color:'#4a4a6a', youFollow:true },
+      { id:4, name:'Morgan Davis', username:'morgand',   initials:'MD', color:'#6a6a3a', youFollow:true },
+    ];
+
+    function renderUserList(users, mode) {
+      userListEl.innerHTML = '';
+      users.forEach(user => {
+        const row = document.createElement('div');
+        row.className = 'user-row';
+
+        const isFollowing = user.youFollow;
+
+        let btnLabel, btnClass;
+        if (mode === 'followers') {
+          btnLabel = isFollowing ? 'Following' : 'Follow back';
+          btnClass = isFollowing ? 'following' : 'follow-back';
+        } else {
+          btnLabel = 'Following';
+          btnClass = 'following';
+        }
+
+        row.innerHTML = `
+          <div class="user-avatar-sm" style="background:${user.color}">${user.initials}</div>
+          <div class="user-info">
+            <p class="user-name">${user.name}</p>
+            <p class="user-username">@${user.username}</p>
+          </div>
+          <button class="btn-follow-action ${btnClass}" data-id="${user.id}" data-mode="${mode}">${btnLabel}</button>
+        `;
+
+        row.querySelector('.btn-follow-action').addEventListener('click', function() {
+          const target = users.find(u => u.id === Number(this.dataset.id));
+          if (!target) return;
+          target.youFollow = !target.youFollow;
+          renderUserList(users, mode);
+        });
+
+        userListEl.appendChild(row);
+      });
+    }
+
+    function openUserList(mode) {
+      userListTitle.textContent = mode === 'followers' ? 'Followers' : 'Following';
+      renderUserList(mode === 'followers' ? mockFollowers : mockFollowing, mode);
+      userListOverlay.classList.add('active');
+    }
+
+    document.getElementById('openFollowers').addEventListener('click', () => openUserList('followers'));
+    document.getElementById('openFollowing').addEventListener('click', () => openUserList('following'));
+    closeUserList.addEventListener('click', () => userListOverlay.classList.remove('active'));
+    userListOverlay.addEventListener('click', e => {
+      if (e.target === userListOverlay) userListOverlay.classList.remove('active');
+    });
   </script>
 </body>
 </html>
