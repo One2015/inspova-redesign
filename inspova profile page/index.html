@@ -294,6 +294,24 @@
     .placeholder-wide { aspect-ratio: 16/9; }
     .placeholder-square { aspect-ratio: 1/1; }
 
+    /* ── Collection badge ── */
+    .collection-badge {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .collection-badge svg { width: 15px; height: 15px; }
+
     /* ── Modal Overlay ── */
     .modal-overlay {
       display: none;
@@ -1042,60 +1060,57 @@
 
     <!-- Tabs -->
     <div class="tabs">
-      <button class="tab active">All</button>
+      <button class="tab active">Creation</button>
       <button class="tab">Collection</button>
       <button class="tab">Element</button>
       <button class="tab">Skill</button>
     </div>
 
     <!-- Masonry Grid -->
-    <div class="masonry">
-      <!-- Column 1 items -->
-      <div class="masonry-item">
+    <div class="masonry" id="masonryGrid">
+      <div class="masonry-item" data-type="creation">
         <div class="placeholder placeholder-tall" style="background: linear-gradient(135deg, #2a3a5c, #c4956a); display:flex; align-items:center; justify-content:center;">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"><rect x="2" y="2" width="20" height="20" rx="4"/><circle cx="8" cy="8" r="2"/><path d="M22 15l-5-5L2 22"/></svg>
         </div>
       </div>
-      <div class="masonry-item">
-        <div class="placeholder placeholder-medium" style="background: linear-gradient(135deg, #5c3a2a, #c49a6a);">
+      <div class="masonry-item" data-type="collection">
+        <div class="placeholder placeholder-medium" style="background: linear-gradient(135deg, #5c3a2a, #c49a6a);"></div>
+        <div class="collection-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="14" height="14" rx="2"/><path d="M7 7V5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2h-2"/></svg>
         </div>
       </div>
-
-      <!-- Column 2 items -->
-      <div class="masonry-item">
+      <div class="masonry-item" data-type="creation">
         <div class="placeholder placeholder-medium" style="background: linear-gradient(135deg, #8b4a3a, #e8a87c); display:flex; align-items:center; justify-content:center;">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"><rect x="2" y="2" width="20" height="20" rx="4"/><circle cx="8" cy="8" r="2"/><path d="M22 15l-5-5L2 22"/></svg>
         </div>
       </div>
-      <div class="masonry-item">
-        <div class="placeholder placeholder-square" style="background: linear-gradient(135deg, #e8dcc8, #c4a87c);">
+      <div class="masonry-item" data-type="collection">
+        <div class="placeholder placeholder-square" style="background: linear-gradient(135deg, #e8dcc8, #c4a87c);"></div>
+        <div class="collection-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="14" height="14" rx="2"/><path d="M7 7V5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2h-2"/></svg>
         </div>
       </div>
-      <div class="masonry-item">
-        <div class="placeholder placeholder-medium" style="background: linear-gradient(135deg, #3a5a4a, #7aaa8c);">
-        </div>
+      <div class="masonry-item" data-type="element">
+        <div class="placeholder placeholder-medium" style="background: linear-gradient(135deg, #3a5a4a, #7aaa8c);"></div>
       </div>
-
-      <!-- Column 3 items -->
-      <div class="masonry-item">
+      <div class="masonry-item" data-type="creation">
         <div class="placeholder" style="aspect-ratio: 3/4; background: linear-gradient(135deg, #3a6a3a, #8aba7c); display:flex; align-items:center; justify-content:center;">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"><rect x="2" y="2" width="20" height="20" rx="4"/><circle cx="8" cy="8" r="2"/><path d="M22 15l-5-5L2 22"/></svg>
         </div>
       </div>
-      <div class="masonry-item">
-        <div class="placeholder placeholder-medium" style="background: linear-gradient(135deg, #4a5a7c, #8aaace);">
+      <div class="masonry-item" data-type="collection">
+        <div class="placeholder placeholder-medium" style="background: linear-gradient(135deg, #4a5a7c, #8aaace);"></div>
+        <div class="collection-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="14" height="14" rx="2"/><path d="M7 7V5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2h-2"/></svg>
         </div>
       </div>
-
-      <!-- Column 4 items -->
-      <div class="masonry-item">
+      <div class="masonry-item" data-type="skill">
         <div class="placeholder placeholder-tall" style="background: linear-gradient(135deg, #2a3a5c, #6a8abc); display:flex; align-items:center; justify-content:center;">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"><rect x="2" y="2" width="20" height="20" rx="4"/><circle cx="8" cy="8" r="2"/><path d="M22 15l-5-5L2 22"/></svg>
         </div>
       </div>
-      <div class="masonry-item">
-        <div class="placeholder placeholder-medium" style="background: linear-gradient(135deg, #3a6a8a, #7ac8ea);">
-        </div>
+      <div class="masonry-item" data-type="element">
+        <div class="placeholder placeholder-medium" style="background: linear-gradient(135deg, #3a6a8a, #7ac8ea);"></div>
       </div>
     </div>
   </main>
@@ -1267,6 +1282,10 @@
       tab.addEventListener('click', () => {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
+        const type = tab.textContent.trim().toLowerCase();
+        document.querySelectorAll('.masonry-item').forEach(item => {
+          item.style.display = item.dataset.type === type ? '' : 'none';
+        });
       });
     });
 
