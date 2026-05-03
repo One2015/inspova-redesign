@@ -1,0 +1,2072 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Inspova · Detail Page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #050506; color: #fff; font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  body { overflow: hidden; }
+  button { font-family: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+  input, textarea { font-family: inherit; color: inherit; background: none; border: 0; outline: 0; }
+  textarea { resize: none; }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 8px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.16); }
+
+  /* Animations */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+  @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+  <meta name="ext-resource-dependency" content="assets/avatar-1.png" data-resource-id="r_avatar_1_png" />
+  <meta name="ext-resource-dependency" content="assets/avatar-2.png" data-resource-id="r_avatar_2_png" />
+  <meta name="ext-resource-dependency" content="assets/avatar-3.png" data-resource-id="r_avatar_3_png" />
+  <meta name="ext-resource-dependency" content="assets/avatar-4.png" data-resource-id="r_avatar_4_png" />
+  <meta name="ext-resource-dependency" content="assets/avatar-5.png" data-resource-id="r_avatar_5_png" />
+  <meta name="ext-resource-dependency" content="assets/avatar-6.png" data-resource-id="r_avatar_6_png" />
+  <meta name="ext-resource-dependency" content="assets/avatar-me.jpg" data-resource-id="r_avatar_me_jpg" />
+  <meta name="ext-resource-dependency" content="assets/element-butterfly.png" data-resource-id="r_element_butterfly_png" />
+  <meta name="ext-resource-dependency" content="assets/element-dress.png" data-resource-id="r_element_dress_png" />
+  <meta name="ext-resource-dependency" content="assets/element-face.png" data-resource-id="r_element_face_png" />
+  <meta name="ext-resource-dependency" content="assets/face-element.png" data-resource-id="r_face_element_png" />
+  <meta name="ext-resource-dependency" content="assets/hero-angel.png" data-resource-id="r_hero_angel_png" />
+  <meta name="ext-resource-dependency" content="assets/remix-1.png" data-resource-id="r_remix_1_png" />
+  <meta name="ext-resource-dependency" content="assets/remix-2.png" data-resource-id="r_remix_2_png" />
+  <meta name="ext-resource-dependency" content="assets/remix-3.png" data-resource-id="r_remix_3_png" />
+  <meta name="ext-resource-dependency" content="assets/remix-4.png" data-resource-id="r_remix_4_png" />
+  <meta name="ext-resource-dependency" content="assets/remix-5.png" data-resource-id="r_remix_5_png" />
+  <meta name="ext-resource-dependency" content="assets/remix-6.png" data-resource-id="r_remix_6_png" />
+  <meta name="ext-resource-dependency" content="assets/remix-7.png" data-resource-id="r_remix_7_png" />
+  
+<template id="__bundler_thumbnail" data-bg-color="#050506">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#050506"/>
+    <defs>
+      <radialGradient id="g" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#a0deff" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#050506" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <circle cx="600" cy="400" r="320" fill="url(#g)"/>
+    <text x="600" y="420" text-anchor="middle" font-family="Inter, sans-serif" font-size="64" font-weight="700" fill="#ffffff" letter-spacing="2">INSPOVA</text>
+  </svg>
+</template>
+
+</head>
+<body>
+  <div id="root"></div>
+
+  <script>
+    // EDITMODE persistent defaults — host parses+rewrites this JSON block
+    window.TWEAKS = /*EDITMODE-BEGIN*/{
+      "threadStyle": "medium",
+      "blurDepth": 116,
+      "composerToggle": "segmented",
+      "mediaType": "image",
+      "ambientIntensity": 0.55
+    }/*EDITMODE-END*/;
+  </script>
+
+  <script>
+  // Pre-bundle fallback: if __resources isn't injected (i.e. running source), fill it from the meta tags
+  (function() {
+    if (!window.__resources) window.__resources = {};
+    document.querySelectorAll('meta[name="ext-resource-dependency"]').forEach(m => {
+      const id = m.getAttribute('data-resource-id');
+      if (!window.__resources[id]) window.__resources[id] = m.getAttribute('content');
+    });
+  })();
+</script>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  
+<script type="text/babel">
+
+// tweaks-panel.jsx
+// Reusable Tweaks shell + form-control helpers.
+//
+// Owns the host protocol (listens for __activate_edit_mode / __deactivate_edit_mode,
+// posts __edit_mode_available / __edit_mode_set_keys / __edit_mode_dismissed) so
+// individual prototypes don't re-roll it. Ships a consistent set of controls so you
+// don't hand-draw <input type="range">, segmented radios, steppers, etc.
+//
+// Usage (in an HTML file that loads React + Babel):
+//
+//   const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+//     "primaryColor": "#D97757",
+//     "fontSize": 16,
+//     "density": "regular",
+//     "dark": false
+//   }/*EDITMODE-END*/;
+//
+//   function App() {
+//     const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+//     return (
+//       <div style={{ fontSize: t.fontSize, color: t.primaryColor }}>
+//         Hello
+//         <TweaksPanel>
+//           <TweakSection label="Typography" />
+//           <TweakSlider label="Font size" value={t.fontSize} min={10} max={32} unit="px"
+//                        onChange={(v) => setTweak('fontSize', v)} />
+//           <TweakRadio  label="Density" value={t.density}
+//                        options={['compact', 'regular', 'comfy']}
+//                        onChange={(v) => setTweak('density', v)} />
+//           <TweakSection label="Theme" />
+//           <TweakColor  label="Primary" value={t.primaryColor}
+//                        onChange={(v) => setTweak('primaryColor', v)} />
+//           <TweakToggle label="Dark mode" value={t.dark}
+//                        onChange={(v) => setTweak('dark', v)} />
+//         </TweaksPanel>
+//       </div>
+//     );
+//   }
+//
+// ─────────────────────────────────────────────────────────────────────────────
+
+const __TWEAKS_STYLE = `
+  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
+    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
+    background:rgba(250,249,247,.78);color:#29261b;
+    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
+    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
+  .twk-hd{display:flex;align-items:center;justify-content:space-between;
+    padding:10px 8px 10px 14px;cursor:move;user-select:none}
+  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
+  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
+    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
+  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
+  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
+    overflow-y:auto;overflow-x:hidden;min-height:0;
+    scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.15) transparent}
+  .twk-body::-webkit-scrollbar{width:8px}
+  .twk-body::-webkit-scrollbar-track{background:transparent;margin:2px}
+  .twk-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:4px;
+    border:2px solid transparent;background-clip:content-box}
+  .twk-body::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.25);
+    border:2px solid transparent;background-clip:content-box}
+  .twk-row{display:flex;flex-direction:column;gap:5px}
+  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;
+    color:rgba(41,38,27,.72)}
+  .twk-lbl>span:first-child{font-weight:500}
+  .twk-val{color:rgba(41,38,27,.5);font-variant-numeric:tabular-nums}
+
+  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:rgba(41,38,27,.45);padding:10px 0 0}
+  .twk-sect:first-child{padding-top:0}
+
+  .twk-field{appearance:none;width:100%;height:26px;padding:0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;
+    background:rgba(255,255,255,.6);color:inherit;font:inherit;outline:none}
+  .twk-field:focus{border-color:rgba(0,0,0,.25);background:rgba(255,255,255,.85)}
+  select.twk-field{padding-right:22px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='rgba(0,0,0,.5)' d='M0 0h10L5 6z'/></svg>");
+    background-repeat:no-repeat;background-position:right 8px center}
+
+  .twk-slider{appearance:none;-webkit-appearance:none;width:100%;height:4px;margin:6px 0;
+    border-radius:999px;background:rgba(0,0,0,.12);outline:none}
+  .twk-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+    width:14px;height:14px;border-radius:50%;background:#fff;
+    border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+  .twk-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
+    background:#fff;border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+
+  .twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;
+    background:rgba(0,0,0,.06);user-select:none}
+  .twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;
+    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);
+    transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}
+  .twk-seg.dragging .twk-seg-thumb{transition:none}
+  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;
+    background:transparent;color:inherit;font:inherit;font-weight:500;min-height:22px;
+    border-radius:6px;cursor:default;padding:4px 6px;line-height:1.2;
+    overflow-wrap:anywhere}
+
+  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;
+    background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}
+  .twk-toggle[data-on="1"]{background:#34c759}
+  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+  .twk-toggle[data-on="1"] i{transform:translateX(14px)}
+
+  .twk-num{display:flex;align-items:center;height:26px;padding:0 0 0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;background:rgba(255,255,255,.6)}
+  .twk-num-lbl{font-weight:500;color:rgba(41,38,27,.6);cursor:ew-resize;
+    user-select:none;padding-right:8px}
+  .twk-num input{flex:1;min-width:0;height:100%;border:0;background:transparent;
+    font:inherit;font-variant-numeric:tabular-nums;text-align:right;padding:0 8px 0 0;
+    outline:none;color:inherit;-moz-appearance:textfield}
+  .twk-num input::-webkit-inner-spin-button,.twk-num input::-webkit-outer-spin-button{
+    -webkit-appearance:none;margin:0}
+  .twk-num-unit{padding-right:8px;color:rgba(41,38,27,.45)}
+
+  .twk-btn{appearance:none;height:26px;padding:0 12px;border:0;border-radius:7px;
+    background:rgba(0,0,0,.78);color:#fff;font:inherit;font-weight:500;cursor:default}
+  .twk-btn:hover{background:rgba(0,0,0,.88)}
+  .twk-btn.secondary{background:rgba(0,0,0,.06);color:inherit}
+  .twk-btn.secondary:hover{background:rgba(0,0,0,.1)}
+
+  .twk-swatch{appearance:none;-webkit-appearance:none;width:56px;height:22px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:6px;padding:0;cursor:default;
+    background:transparent;flex-shrink:0}
+  .twk-swatch::-webkit-color-swatch-wrapper{padding:0}
+  .twk-swatch::-webkit-color-swatch{border:0;border-radius:5.5px}
+  .twk-swatch::-moz-color-swatch{border:0;border-radius:5.5px}
+`;
+
+// ── useTweaks ───────────────────────────────────────────────────────────────
+// Single source of truth for tweak values. setTweak persists via the host
+// (__edit_mode_set_keys → host rewrites the EDITMODE block on disk).
+function useTweaks(defaults) {
+  const [values, setValues] = React.useState(defaults);
+  // Accepts either setTweak('key', value) or setTweak({ key: value, ... }) so a
+  // useState-style call doesn't write a "[object Object]" key into the persisted
+  // JSON block.
+  const setTweak = React.useCallback((keyOrEdits, val) => {
+    const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null
+      ? keyOrEdits : { [keyOrEdits]: val };
+    setValues((prev) => ({ ...prev, ...edits }));
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*');
+  }, []);
+  return [values, setTweak];
+}
+
+// ── TweaksPanel ─────────────────────────────────────────────────────────────
+// Floating shell. Registers the protocol listener BEFORE announcing
+// availability — if the announce ran first, the host's activate could land
+// before our handler exists and the toolbar toggle would silently no-op.
+// The close button posts __edit_mode_dismissed so the host's toolbar toggle
+// flips off in lockstep; the host echoes __deactivate_edit_mode back which
+// is what actually hides the panel.
+function TweaksPanel({ title = 'Tweaks', children }) {
+  const [open, setOpen] = React.useState(false);
+  const dragRef = React.useRef(null);
+  const offsetRef = React.useRef({ x: 16, y: 16 });
+  const PAD = 16;
+
+  const clampToViewport = React.useCallback(() => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const w = panel.offsetWidth, h = panel.offsetHeight;
+    const maxRight = Math.max(PAD, window.innerWidth - w - PAD);
+    const maxBottom = Math.max(PAD, window.innerHeight - h - PAD);
+    offsetRef.current = {
+      x: Math.min(maxRight, Math.max(PAD, offsetRef.current.x)),
+      y: Math.min(maxBottom, Math.max(PAD, offsetRef.current.y)),
+    };
+    panel.style.right = offsetRef.current.x + 'px';
+    panel.style.bottom = offsetRef.current.y + 'px';
+  }, []);
+
+  React.useEffect(() => {
+    if (!open) return;
+    clampToViewport();
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', clampToViewport);
+      return () => window.removeEventListener('resize', clampToViewport);
+    }
+    const ro = new ResizeObserver(clampToViewport);
+    ro.observe(document.documentElement);
+    return () => ro.disconnect();
+  }, [open, clampToViewport]);
+
+  React.useEffect(() => {
+    const onMsg = (e) => {
+      const t = e?.data?.type;
+      if (t === '__activate_edit_mode') setOpen(true);
+      else if (t === '__deactivate_edit_mode') setOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const dismiss = () => {
+    setOpen(false);
+    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+  };
+
+  const onDragStart = (e) => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const r = panel.getBoundingClientRect();
+    const sx = e.clientX, sy = e.clientY;
+    const startRight = window.innerWidth - r.right;
+    const startBottom = window.innerHeight - r.bottom;
+    const move = (ev) => {
+      offsetRef.current = {
+        x: startRight - (ev.clientX - sx),
+        y: startBottom - (ev.clientY - sy),
+      };
+      clampToViewport();
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  };
+
+  if (!open) return null;
+  return (
+    <>
+      <style>{__TWEAKS_STYLE}</style>
+      <div ref={dragRef} className="twk-panel" data-noncommentable=""
+           style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
+        <div className="twk-hd" onMouseDown={onDragStart}>
+          <b>{title}</b>
+          <button className="twk-x" aria-label="Close tweaks"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onClick={dismiss}>✕</button>
+        </div>
+        <div className="twk-body">{children}</div>
+      </div>
+    </>
+  );
+}
+
+// ── Layout helpers ──────────────────────────────────────────────────────────
+
+function TweakSection({ label, children }) {
+  return (
+    <>
+      <div className="twk-sect">{label}</div>
+      {children}
+    </>
+  );
+}
+
+function TweakRow({ label, value, children, inline = false }) {
+  return (
+    <div className={inline ? 'twk-row twk-row-h' : 'twk-row'}>
+      <div className="twk-lbl">
+        <span>{label}</span>
+        {value != null && <span className="twk-val">{value}</span>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// ── Controls ────────────────────────────────────────────────────────────────
+
+function TweakSlider({ label, value, min = 0, max = 100, step = 1, unit = '', onChange }) {
+  return (
+    <TweakRow label={label} value={`${value}${unit}`}>
+      <input type="range" className="twk-slider" min={min} max={max} step={step}
+             value={value} onChange={(e) => onChange(Number(e.target.value))} />
+    </TweakRow>
+  );
+}
+
+function TweakToggle({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <button type="button" className="twk-toggle" data-on={value ? '1' : '0'}
+              role="switch" aria-checked={!!value}
+              onClick={() => onChange(!value)}><i /></button>
+    </div>
+  );
+}
+
+function TweakRadio({ label, value, options, onChange }) {
+  const trackRef = React.useRef(null);
+  const [dragging, setDragging] = React.useState(false);
+  const opts = options.map((o) => (typeof o === 'object' ? o : { value: o, label: o }));
+  const idx = Math.max(0, opts.findIndex((o) => o.value === value));
+  const n = opts.length;
+
+  // The active value is read by pointer-move handlers attached for the lifetime
+  // of a drag — ref it so a stale closure doesn't fire onChange for every move.
+  const valueRef = React.useRef(value);
+  valueRef.current = value;
+
+  const segAt = (clientX) => {
+    const r = trackRef.current.getBoundingClientRect();
+    const inner = r.width - 4;
+    const i = Math.floor(((clientX - r.left - 2) / inner) * n);
+    return opts[Math.max(0, Math.min(n - 1, i))].value;
+  };
+
+  const onPointerDown = (e) => {
+    setDragging(true);
+    const v0 = segAt(e.clientX);
+    if (v0 !== valueRef.current) onChange(v0);
+    const move = (ev) => {
+      if (!trackRef.current) return;
+      const v = segAt(ev.clientX);
+      if (v !== valueRef.current) onChange(v);
+    };
+    const up = () => {
+      setDragging(false);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+
+  return (
+    <TweakRow label={label}>
+      <div ref={trackRef} role="radiogroup" onPointerDown={onPointerDown}
+           className={dragging ? 'twk-seg dragging' : 'twk-seg'}>
+        <div className="twk-seg-thumb"
+             style={{ left: `calc(2px + ${idx} * (100% - 4px) / ${n})`,
+                      width: `calc((100% - 4px) / ${n})` }} />
+        {opts.map((o) => (
+          <button key={o.value} type="button" role="radio" aria-checked={o.value === value}>
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </TweakRow>
+  );
+}
+
+function TweakSelect({ label, value, options, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <select className="twk-field" value={value} onChange={(e) => onChange(e.target.value)}>
+        {options.map((o) => {
+          const v = typeof o === 'object' ? o.value : o;
+          const l = typeof o === 'object' ? o.label : o;
+          return <option key={v} value={v}>{l}</option>;
+        })}
+      </select>
+    </TweakRow>
+  );
+}
+
+function TweakText({ label, value, placeholder, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <input className="twk-field" type="text" value={value} placeholder={placeholder}
+             onChange={(e) => onChange(e.target.value)} />
+    </TweakRow>
+  );
+}
+
+function TweakNumber({ label, value, min, max, step = 1, unit = '', onChange }) {
+  const clamp = (n) => {
+    if (min != null && n < min) return min;
+    if (max != null && n > max) return max;
+    return n;
+  };
+  const startRef = React.useRef({ x: 0, val: 0 });
+  const onScrubStart = (e) => {
+    e.preventDefault();
+    startRef.current = { x: e.clientX, val: value };
+    const decimals = (String(step).split('.')[1] || '').length;
+    const move = (ev) => {
+      const dx = ev.clientX - startRef.current.x;
+      const raw = startRef.current.val + dx * step;
+      const snapped = Math.round(raw / step) * step;
+      onChange(clamp(Number(snapped.toFixed(decimals))));
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+  return (
+    <div className="twk-num">
+      <span className="twk-num-lbl" onPointerDown={onScrubStart}>{label}</span>
+      <input type="number" value={value} min={min} max={max} step={step}
+             onChange={(e) => onChange(clamp(Number(e.target.value)))} />
+      {unit && <span className="twk-num-unit">{unit}</span>}
+    </div>
+  );
+}
+
+function TweakColor({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <input type="color" className="twk-swatch" value={value}
+             onChange={(e) => onChange(e.target.value)} />
+    </div>
+  );
+}
+
+function TweakButton({ label, onClick, secondary = false }) {
+  return (
+    <button type="button" className={secondary ? 'twk-btn secondary' : 'twk-btn'}
+            onClick={onClick}>{label}</button>
+  );
+}
+
+Object.assign(window, {
+  useTweaks, TweaksPanel, TweakSection, TweakRow,
+  TweakSlider, TweakToggle, TweakRadio, TweakSelect,
+  TweakText, TweakNumber, TweakColor, TweakButton,
+});
+
+</script>
+<script type="text/babel">
+
+// === icons.jsx ===
+// SVG icons — clean stroke style, 24px default
+const Icon = ({ d, size = 20, fill = "none", stroke = "currentColor", strokeWidth = 1.6, children, viewBox = "0 0 24 24", style }) => (
+  <svg width={size} height={size} viewBox={viewBox} fill={fill} stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" style={style}>
+    {children || <path d={d} />}
+  </svg>
+);
+
+const IconArrowLeft = (p) => <Icon {...p}><path d="M15 19l-7-7 7-7" /></Icon>;
+const IconArrowRight = (p) => <Icon {...p}><path d="M9 19l7-7-7-7" /></Icon>;
+const IconHome = (p) => <Icon {...p}><path d="M3 11l9-8 9 8v9a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2z" /></Icon>;
+const IconEdit = (p) => <Icon {...p}><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z" /></Icon>;
+const IconBookmark = (p) => <Icon {...p}><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></Icon>;
+const IconBookmarkFilled = (p) => <Icon {...p} fill="currentColor" stroke="currentColor"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></Icon>;
+const IconRemix = (p) => <Icon {...p}><path d="M17 1l4 4-4 4" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><path d="M7 23l-4-4 4-4" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></Icon>;
+const IconShare = (p) => <Icon {...p}><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><path d="M16 6l-4-4-4 4" /><path d="M12 2v13" /></Icon>;
+const IconHeart = (p) => <Icon {...p}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></Icon>;
+const IconHeartFilled = (p) => <Icon {...p} fill="currentColor" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></Icon>;
+const IconChat = (p) => <Icon {...p}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></Icon>;
+const IconReply = (p) => <Icon {...p}><path d="M9 17l-5-5 5-5" /><path d="M20 18v-2a4 4 0 0 0-4-4H4" /></Icon>;
+const IconClose = (p) => <Icon {...p}><path d="M18 6L6 18" /><path d="M6 6l12 12" /></Icon>;
+const IconSend = (p) => <Icon {...p}><path d="M5 12l14-7-7 14-2-5z" /></Icon>;
+const IconSparkles = (p) => <Icon {...p}><path d="M12 3l1.7 4.7L18 9.4l-4.3 1.7L12 16l-1.7-4.9L6 9.4l4.3-1.7z" /><path d="M19 14l.7 1.8L21.5 16.5l-1.8.7L19 19l-.7-1.8L16.5 16.5l1.8-.7z" /></Icon>;
+const IconPlay = (p) => <Icon {...p}><path d="M5 3l14 9-14 9z" fill="currentColor" stroke="none" /></Icon>;
+const IconMoreH = (p) => <Icon {...p}><circle cx="12" cy="12" r="1" fill="currentColor" /><circle cx="19" cy="12" r="1" fill="currentColor" /><circle cx="5" cy="12" r="1" fill="currentColor" /></Icon>;
+const IconPlus = (p) => <Icon {...p}><path d="M12 5v14M5 12h14" /></Icon>;
+const IconCheck = (p) => <Icon {...p}><path d="M20 6L9 17l-5-5" /></Icon>;
+const IconAt = (p) => <Icon {...p}><circle cx="12" cy="12" r="4" /><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8" /></Icon>;
+const IconImg = (p) => <Icon {...p}><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="M21 15l-5-5L5 21" /></Icon>;
+const IconWand = (p) => <Icon {...p}><path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8L19 13M15 9h0M17.8 6.2L19 5M3 21l9-9M12.2 6.2L11 5" /></Icon>;
+const IconGrid = (p) => <Icon {...p}><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></Icon>;
+const IconPlusSm = (p) => <Icon {...p} size={p.size || 12}><path d="M12 5v14M5 12h14" /></Icon>;
+const IconCornerUp = (p) => <Icon {...p}><polyline points="9 14 4 9 9 4" /><path d="M20 20v-7a4 4 0 0 0-4-4H4" /></Icon>;
+
+Object.assign(window, {
+  Icon, IconArrowLeft, IconArrowRight, IconHome, IconEdit, IconBookmark, IconBookmarkFilled, IconRemix, IconShare,
+  IconHeart, IconHeartFilled, IconChat, IconReply, IconClose, IconSend, IconSparkles, IconPlay,
+  IconMoreH, IconPlus, IconCheck, IconAt, IconImg, IconWand, IconGrid, IconPlusSm, IconCornerUp
+});
+
+
+// === data.jsx ===
+// Mock data for the detail page
+
+const HERO = {
+  id: "post-001",
+  type: "image", // or "video"
+  src: window.__resources['r_hero_angel_png'],
+  videoSrc: window.__resources['r_hero_angel_png'],
+  title: "Angel in the elevator portrait",
+  prompt: "Using the attached photo (keep the exact facial features and expression from the reference), create an ethereal portrait of a figure standing in an elevator. Soft cinematic lighting with celestial wings catching warm gold backlight. Flowing white silk dress with subtle sheen. Composition references high-fashion editorial work — shallow depth of field, slight vignette, dreamy diffusion.",
+  promptShort: "Using the attached photo (keep the exact facial features and expression), create an ethereal portrait...",
+  remixedFrom: "@Alila",
+  creator: {
+    name: "creatorA",
+    handle: "@creatorA",
+    avatar: window.__resources['r_face_element_png'],
+    followers: "12.4k"
+  },
+  stats: { remixes: 672, saves: 1000, shares: 4000, comments: 84 },
+  elements: [
+    { id: "e1", name: "Face — Mira", img: window.__resources['r_face_element_png'], type: "Reference" },
+    { id: "e2", name: "Wings — Butterfly", img: window.__resources['r_element_butterfly_png'], type: "Asset" },
+    { id: "e3", name: "Dress — Silk Gown", img: window.__resources['r_element_dress_png'], type: "Asset" }
+  ],
+  skills: [
+    { name: "Seedance 2.0", kind: "model" },
+    { name: "/Skill: Dreamy Light", kind: "skill" },
+    { name: "/Skill: Cinematic", kind: "skill" }
+  ]
+};
+
+// Merged timeline of comments + remixes (chronological — newest first)
+const THREAD = [
+  {
+    id: "t1",
+    kind: "remix",
+    user: { name: "Sophiaaa", handle: "@sophiaaa", avatar: window.__resources['r_avatar_1_png'] },
+    time: "2h",
+    text: "Remixed it to a Genz street style — denim jacket + neon halo",
+    media: window.__resources['r_remix_2_png'],
+    stats: { likes: 234, remixes: 18, comments: 6 },
+    replies: [
+      { id: "t1r1", user: { name: "kim_yj", avatar: window.__resources['r_avatar_4_png'] }, time: "1h", text: "the halo treatment is sick 🔥" },
+      { id: "t1r2", user: { name: "creatorA", avatar: window.__resources['r_avatar_5_png'] }, time: "45m", text: "ohhh I love this direction" }
+    ]
+  },
+  {
+    id: "t2",
+    kind: "comment",
+    user: { name: "banana.studio", handle: "@banana", avatar: window.__resources['r_avatar_2_png'] },
+    time: "4h",
+    text: "Love this vibe. The wing diffusion is exactly the look I've been chasing.",
+    stats: { likes: 12 }
+  },
+  {
+    id: "t3",
+    kind: "remix",
+    user: { name: "minka_a", handle: "@minka", avatar: window.__resources['r_avatar_3_png'] },
+    time: "6h",
+    text: "Tried it with butterfly wings instead — softer feel",
+    media: window.__resources['r_remix_4_png'],
+    stats: { likes: 89, remixes: 4, comments: 2 }
+  },
+  {
+    id: "t4",
+    kind: "remix",
+    user: { name: "Eve.ai", handle: "@eve", avatar: window.__resources['r_avatar_4_png'] },
+    time: "1d",
+    text: "Pushed it cinematic with cold blues",
+    media: window.__resources['r_remix_3_png'],
+    stats: { likes: 412, remixes: 27, comments: 11 }
+  },
+  {
+    id: "t5",
+    kind: "comment",
+    user: { name: "yume", handle: "@yume", avatar: window.__resources['r_avatar_5_png'] },
+    time: "1d",
+    text: "what skill stack? the diffusion is clean",
+    stats: { likes: 4 }
+  },
+  {
+    id: "t6",
+    kind: "remix",
+    user: { name: "xinyi", handle: "@xinyi", avatar: window.__resources['r_avatar_6_png'] },
+    time: "2d",
+    text: "Dress only — wedding mood",
+    media: window.__resources['r_remix_6_png'],
+    stats: { likes: 58, remixes: 3, comments: 1 }
+  }
+];
+
+Object.assign(window, { HERO, THREAD });
+
+
+// === sidebar.jsx ===
+// Left navigation rail
+function Sidebar() {
+  return (
+    <aside style={{
+      width: 64, height: '100vh', flexShrink: 0,
+      display: 'flex', flexDirection: 'column', alignItems: 'center',
+      padding: '20px 0 16px', position: 'relative', zIndex: 30,
+    }}>
+      <button title="Inspova" style={{
+        width: 28, height: 28, display: 'grid', placeItems: 'center',
+      }}>
+        <IconGrid size={20} stroke="rgba(255,255,255,0.95)" />
+      </button>
+
+      <div style={{ flex: 1 }} />
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 22, marginBottom: 'auto', marginTop: 'auto' }}>
+        <NavBtn icon={<IconHome size={20} />} />
+        <NavBtn icon={<IconEdit size={20} />} />
+        <NavBtn icon={<IconBookmark size={20} />} />
+      </div>
+
+      <div style={{ flex: 1 }} />
+
+      <button style={{
+        width: 32, height: 32, borderRadius: 999, overflow: 'hidden',
+        background: `url(assets/avatar-me.jpg) center/cover`,
+        border: '1px solid rgba(255,255,255,0.12)',
+      }} />
+    </aside>
+  );
+}
+
+function NavBtn({ icon, active }) {
+  const [hover, setHover] = React.useState(false);
+  return (
+    <button
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        width: 36, height: 36, borderRadius: 10, display: 'grid', placeItems: 'center',
+        color: active ? '#fff' : (hover ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.6)'),
+        background: hover ? 'rgba(255,255,255,0.06)' : 'transparent',
+        transition: 'all .15s ease',
+      }}>
+      {icon}
+    </button>
+  );
+}
+
+window.Sidebar = Sidebar;
+
+
+// === content.jsx ===
+// Left content area: hero media + action rail
+function Content({ tweaks, onRemixClick, agentMode }) {
+  const [saved, setSaved] = React.useState(false);
+  const [following, setFollowing] = React.useState(false);
+
+  const isVideo = tweaks.mediaType === "video";
+
+  return (
+    <div style={{
+      flex: 1, position: 'relative',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: '32px 24px 32px 0', minWidth: 0,
+    }}>
+      {/* Top bar — back button */}
+      <div style={{
+        position: 'absolute', top: 24, left: 16, display: 'flex', alignItems: 'center', gap: 12, zIndex: 5,
+      }}>
+        <button style={{
+          width: 36, height: 36, borderRadius: 999, display: 'grid', placeItems: 'center',
+          background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255,255,255,0.06)',
+        }}>
+          <IconArrowLeft size={18} stroke="rgba(255,255,255,0.9)" />
+        </button>
+      </div>
+
+      {/* Top right — Creator pill + follow */}
+      <div style={{
+        position: 'absolute', top: 24, right: 16, display: 'flex', alignItems: 'center', gap: 10, zIndex: 5,
+      }}>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 10,
+          padding: '6px 14px 6px 6px', borderRadius: 999,
+          background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255,255,255,0.06)',
+        }}>
+          <div style={{
+            width: 28, height: 28, borderRadius: 999, overflow: 'hidden',
+            background: `url(${HERO.creator.avatar}) center/cover, rgba(255,255,255,0.06)`,
+          }} />
+          <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15 }}>
+            <span style={{ fontSize: 13, fontWeight: 500 }}>{HERO.creator.handle}</span>
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>{HERO.creator.followers} followers</span>
+          </div>
+          <button onClick={() => setFollowing(f => !f)} style={{
+            marginLeft: 6, padding: '5px 12px', borderRadius: 999, fontSize: 12, fontWeight: 600,
+            background: following ? 'rgba(255,255,255,0.08)' : '#fff',
+            color: following ? 'rgba(255,255,255,0.85)' : '#000',
+            border: '1px solid ' + (following ? 'rgba(255,255,255,0.12)' : 'transparent'),
+            transition: 'all .15s',
+          }}>
+            {following ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><IconCheck size={12} /> Following</span> : 'Follow'}
+          </button>
+        </div>
+        <button title="More" style={{
+          width: 36, height: 36, borderRadius: 999, display: 'grid', placeItems: 'center',
+          background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255,255,255,0.06)',
+        }}>
+          <IconMoreH size={18} stroke="rgba(255,255,255,0.85)" />
+        </button>
+      </div>
+
+      {/* Hero media */}
+      <div style={{
+        position: 'relative', maxHeight: 'calc(100vh - 80px)',
+        aspectRatio: '720/940', width: 'auto', height: '100%',
+        borderRadius: 22, overflow: 'hidden',
+        boxShadow: '0 30px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04) inset',
+      }}>
+        <img src={HERO.src} alt="" style={{
+          width: '100%', height: '100%', objectFit: 'cover', display: 'block',
+        }} />
+        {isVideo && (
+          <>
+            <button style={{
+              position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
+              width: 64, height: 64, borderRadius: 999,
+              background: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255,255,255,0.18)',
+              display: 'grid', placeItems: 'center',
+            }}>
+              <IconPlay size={26} stroke="#fff" style={{ marginLeft: 3 }} />
+            </button>
+            <div style={{
+              position: 'absolute', left: 16, right: 16, bottom: 16,
+              height: 3, borderRadius: 3, background: 'rgba(255,255,255,0.18)',
+            }}>
+              <div style={{ width: '34%', height: '100%', background: '#fff', borderRadius: 3 }} />
+            </div>
+            <div style={{
+              position: 'absolute', top: 16, left: 16, padding: '4px 8px', borderRadius: 6,
+              background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(10px)',
+              fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: 0.4, color: '#fff',
+            }}>
+              VIDEO · 0:12
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Action rail — overlaid on right edge of hero */}
+      {!agentMode && (
+        <ActionRail
+          saved={saved} onSave={() => setSaved(s => !s)}
+          onRemix={onRemixClick}
+        />
+      )}
+    </div>
+  );
+}
+
+function ActionRail({ saved, onSave, onRemix }) {
+  return (
+    <div style={{
+      position: 'absolute', right: 40, bottom: 36, zIndex: 6,
+      display: 'flex', flexDirection: 'column', gap: 18, alignItems: 'center',
+    }}>
+      <ActionBtn onClick={onRemix} icon={<IconRemix size={22} />} label={HERO.stats.remixes} />
+      <ActionBtn onClick={onSave} icon={saved ? <IconBookmarkFilled size={22} /> : <IconBookmark size={22} />} label={(HERO.stats.saves + (saved?1:0)).toLocaleString()} />
+      <ActionBtn icon={<IconShare size={22} />} label={HERO.stats.shares.toLocaleString()} />
+    </div>
+  );
+}
+
+function ActionBtn({ icon, label, onClick }) {
+  const [hover, setHover] = React.useState(false);
+  return (
+    <button onClick={onClick} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+      <div style={{
+        width: 48, height: 48, borderRadius: 999, display: 'grid', placeItems: 'center',
+        background: hover ? 'rgba(0,0,0,0.7)' : 'rgba(0,0,0,0.5)',
+        backdropFilter: 'blur(16px)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        color: '#fff',
+        transform: hover ? 'scale(1.05)' : 'scale(1)',
+        transition: 'all .15s ease',
+      }}>
+        {icon}
+      </div>
+      <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.85)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
+        {typeof label === 'number' ? label.toLocaleString() : label}
+      </span>
+    </button>
+  );
+}
+
+window.Content = Content;
+
+
+// === info-panel.jsx ===
+// Right info panel — elements, prompt, thread, composer
+function InfoPanel({ tweaks, agentMode, onEnterAgent, onExitAgent, onElementClick, onRemixOpen }) {
+  const [hoveredEl, setHoveredEl] = React.useState(null);
+  const [savedEls, setSavedEls] = React.useState({});
+  const [promptExpanded, setPromptExpanded] = React.useState(false);
+  const [threadExpanded, setThreadExpanded] = React.useState(false);
+  const [composerMode, setComposerMode] = React.useState('comment'); // 'comment' | 'create'
+  const [composerText, setComposerText] = React.useState('');
+  const promptRef = React.useRef(null);
+  const [promptOverflow, setPromptOverflow] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!promptRef.current) return;
+    const el = promptRef.current;
+    // measure: compare scrollHeight vs 2 lines
+    const lh = parseFloat(getComputedStyle(el).lineHeight) || 21;
+    setPromptOverflow(el.scrollHeight > lh * 2 + 2);
+  }, []);
+
+  const toggleSave = (id) => {
+    setSavedEls(s => ({ ...s, [id]: !s[id] }));
+  };
+
+  const handleSend = () => {
+    if (!composerText.trim()) return;
+    if (composerMode === 'create') {
+      onEnterAgent(composerText);
+      setComposerText('');
+    } else {
+      // would post comment in real app
+      setComposerText('');
+    }
+  };
+
+  if (agentMode) {
+    return <AgentPanel onExit={onExitAgent} initialPrompt={agentMode.prompt} />;
+  }
+
+  return (
+    <aside style={{
+      width: 440, flexShrink: 0, height: '100vh',
+      display: 'flex', flexDirection: 'column',
+      background: 'rgba(10,10,12,0.55)',
+      backdropFilter: 'blur(40px)',
+      borderLeft: '1px solid rgba(255,255,255,0.05)',
+      position: 'relative', zIndex: 4,
+    }}>
+      {/* Scroll content */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: '28px 24px 12px' }}>
+        {/* Title */}
+        <h1 style={{
+          fontSize: 20, fontWeight: 600, margin: '0 0 6px', letterSpacing: '-0.3px',
+        }}>{HERO.title}</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 24, fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>
+          <span>Remixed from</span>
+          <span style={{
+            padding: '2px 8px', borderRadius: 999, background: 'rgba(255,255,255,0.08)',
+            color: 'rgba(255,255,255,0.85)', fontWeight: 500,
+          }}>{HERO.remixedFrom}</span>
+        </div>
+
+        {/* Elements */}
+        <Section title="Elements" hint={`${HERO.elements.length}`}>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            {HERO.elements.map(el => (
+              <ElementChip key={el.id}
+                el={el}
+                hovered={hoveredEl === el.id}
+                saved={savedEls[el.id]}
+                onHover={() => setHoveredEl(el.id)}
+                onLeave={() => setHoveredEl(null)}
+                onSave={() => toggleSave(el.id)}
+                onClick={() => onElementClick(el)}
+              />
+            ))}
+          </div>
+        </Section>
+
+        {/* Prompt */}
+        <Section title="Prompt">
+          <div style={{
+            padding: 14, borderRadius: 14,
+            background: 'rgba(255,255,255,0.03)',
+            border: '1px solid rgba(255,255,255,0.05)',
+          }}>
+            <p ref={promptRef} style={{
+              margin: 0, fontSize: 13.5, lineHeight: 1.55, color: 'rgba(255,255,255,0.82)',
+              textWrap: 'pretty',
+              display: '-webkit-box', WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: promptExpanded ? 'unset' : 2,
+              overflow: promptExpanded ? 'visible' : 'hidden',
+            }}>
+              {HERO.prompt}
+            </p>
+            {promptOverflow && (
+              <button onClick={() => setPromptExpanded(e => !e)} style={{
+                marginTop: 6, color: 'rgba(255,255,255,0.55)', fontSize: 12, fontWeight: 500,
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+              }}>
+                {promptExpanded ? 'Show less' : 'Show more'}
+                <span style={{ display: 'inline-block', transform: promptExpanded ? 'rotate(180deg)' : 'none', transition: 'transform .15s' }}>▾</span>
+              </button>
+            )}
+            <div style={{ display: 'flex', gap: 6, marginTop: 12, flexWrap: 'wrap' }}>
+              {HERO.skills.map(s => (
+                <span key={s.name} style={{
+                  fontSize: 11, padding: '4px 10px', borderRadius: 999,
+                  background: s.kind === 'model' ? 'rgba(255,255,255,0.08)' : 'rgba(128,212,255,0.10)',
+                  color: s.kind === 'model' ? 'rgba(255,255,255,0.85)' : 'rgb(160,222,255)',
+                  border: '1px solid ' + (s.kind === 'model' ? 'rgba(255,255,255,0.08)' : 'rgba(128,212,255,0.15)'),
+                  fontFamily: s.kind === 'skill' ? 'JetBrains Mono, monospace' : 'inherit',
+                  letterSpacing: s.kind === 'skill' ? 0 : 0,
+                }}>{s.name}</span>
+              ))}
+            </div>
+          </div>
+        </Section>
+
+        {/* Thread — Inspired by this — collapse after 3 */}
+        <Section title="Inspired by this" hint={`${THREAD.length}`}>
+          <Thread
+            items={threadExpanded ? THREAD : THREAD.slice(0, 3)}
+            threadStyle={tweaks.threadStyle}
+            onRemixOpen={onRemixOpen}
+          />
+          {THREAD.length > 3 && (
+            <button onClick={() => setThreadExpanded(e => !e)} style={{
+              marginTop: 4, fontSize: 12, color: 'rgba(255,255,255,0.55)',
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              padding: '6px 12px', borderRadius: 999,
+              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
+            }}>
+              {threadExpanded ? `Show less` : `Show ${THREAD.length - 3} more`}
+              <span style={{ display: 'inline-block', transform: threadExpanded ? 'rotate(180deg)' : 'none', transition: 'transform .15s' }}>▾</span>
+            </button>
+          )}
+        </Section>
+      </div>
+
+      {/* Composer pinned to bottom */}
+      <Composer
+        mode={composerMode} setMode={setComposerMode}
+        value={composerText} setValue={setComposerText}
+        onSend={handleSend} toggleStyle={tweaks.composerToggle}
+      />
+    </aside>
+  );
+}
+
+function Section({ title, hint, children }) {
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 12 }}>
+        <h3 style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.95)', margin: 0, letterSpacing: 0.2 }}>{title}</h3>
+        {hint && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontVariantNumeric: 'tabular-nums' }}>{hint}</span>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function ElementChip({ el, hovered, saved, onHover, onLeave, onSave, onClick }) {
+  return (
+    <div
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
+      onClick={onClick}
+      style={{
+        position: 'relative', width: 76, cursor: 'pointer',
+      }}>
+      <div style={{
+        width: 76, height: 76, borderRadius: 14, overflow: 'hidden',
+        background: `url(${el.img}) center/cover, rgba(255,255,255,0.04)`,
+        border: '1px solid ' + (hovered ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.06)'),
+        transition: 'all .15s ease',
+        transform: hovered ? 'translateY(-1px)' : 'none',
+      }} />
+      {/* save fab — top right */}
+      <button
+        onClick={(e) => { e.stopPropagation(); onSave(); }}
+        style={{
+          position: 'absolute', top: 4, right: 4, width: 22, height: 22, borderRadius: 6,
+          background: saved ? '#fff' : 'rgba(0,0,0,0.6)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          opacity: hovered || saved ? 1 : 0,
+          transform: hovered || saved ? 'scale(1)' : 'scale(0.85)',
+          transition: 'all .15s ease',
+          display: 'grid', placeItems: 'center', color: saved ? '#000' : '#fff',
+        }}>
+        {saved ? <IconBookmarkFilled size={11} /> : <IconBookmark size={11} />}
+      </button>
+      <div style={{ marginTop: 6, fontSize: 11, color: 'rgba(255,255,255,0.7)', textAlign: 'left', lineHeight: 1.3 }}>
+        <div style={{ fontWeight: 500, color: 'rgba(255,255,255,0.85)' }}>{el.name.split(' — ')[0]}</div>
+        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', fontFamily: 'JetBrains Mono' }}>{el.type.toLowerCase()}</div>
+      </div>
+    </div>
+  );
+}
+
+window.InfoPanel = InfoPanel;
+
+
+// === thread.jsx ===
+// Thread component — Threads-style vertical timeline of comments + remixes
+function Thread({ items, threadStyle, onRemixOpen }) {
+  const [expanded, setExpanded] = React.useState({});
+
+  return (
+    <div style={{ position: 'relative' }}>
+      {items.map((item, i) => (
+        <ThreadItem
+          key={item.id} item={item}
+          isLast={i === items.length - 1}
+          threadStyle={threadStyle}
+          expanded={expanded[item.id]}
+          onToggle={() => setExpanded(e => ({ ...e, [item.id]: !e[item.id] }))}
+          onRemixOpen={onRemixOpen}
+        />
+      ))}
+    </div>
+  );
+}
+
+function ThreadItem({ item, isLast, threadStyle, expanded, onToggle, onRemixOpen }) {
+  const compact = threadStyle === 'compact';
+  const rich = threadStyle === 'rich';
+  const avatarSize = compact ? 26 : 32;
+  const lineLeft = compact ? 13 : 16;
+
+  const hasMedia = item.kind === 'remix' && item.media;
+  const hasReplies = item.replies && item.replies.length > 0;
+
+  return (
+    <div style={{ position: 'relative', display: 'flex', gap: 12, paddingBottom: isLast ? 8 : 18 }}>
+      {/* Avatar + thread line column */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
+        <div style={{
+          width: avatarSize, height: avatarSize, borderRadius: 999, flexShrink: 0,
+          background: `url(${item.user.avatar}) center/cover, rgba(255,255,255,0.06)`,
+          border: '1px solid rgba(255,255,255,0.1)',
+        }} />
+        {!isLast && (
+          <div style={{
+            flex: 1, width: 2, marginTop: 6, marginBottom: 6,
+            background: 'rgba(255,255,255,0.08)', borderRadius: 2,
+          }} />
+        )}
+        {/* Mini avatar at end of line for last reply (Threads-style stack) */}
+        {!isLast && hasReplies && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 4 }}>
+            {item.replies.slice(0, Math.min(2, item.replies.length)).map((r, idx) => (
+              <div key={idx} style={{
+                width: 10, height: 10, borderRadius: 999,
+                background: `url(${r.user.avatar}) center/cover, rgba(255,255,255,0.1)`,
+              }} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Content */}
+      <div style={{ flex: 1, minWidth: 0, paddingTop: 1 }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 3 }}>
+          <span style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>{item.user.name}</span>
+          {item.kind === 'remix' && (
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: 3,
+              fontSize: 10, padding: '1px 6px', borderRadius: 999,
+              background: 'rgba(128,212,255,0.10)', color: 'rgb(150,215,255)',
+              border: '1px solid rgba(128,212,255,0.18)',
+              fontFamily: 'JetBrains Mono', letterSpacing: 0.2,
+            }}>
+              <IconRemix size={10} strokeWidth={2} /> remix
+            </span>
+          )}
+          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>· {item.time}</span>
+        </div>
+
+        {/* Text */}
+        <p style={{
+          margin: 0, fontSize: 13.5, lineHeight: 1.45, color: 'rgba(255,255,255,0.85)',
+          textWrap: 'pretty', marginBottom: hasMedia ? 8 : 6,
+        }}>{item.text}</p>
+
+        {/* Remix media preview — opens remix history (agent-style chat) */}
+        {hasMedia && !compact && (
+          <button onClick={() => onRemixOpen && onRemixOpen(item)} style={{
+            position: 'relative', display: 'block', marginTop: 4, marginBottom: 8,
+            width: rich ? '100%' : 140, maxWidth: 240,
+            aspectRatio: rich ? '3/4' : '4/5',
+            borderRadius: 12, overflow: 'hidden',
+            background: `url(${item.media}) center/cover, rgba(255,255,255,0.04)`,
+            border: '1px solid rgba(255,255,255,0.08)',
+            cursor: 'pointer',
+          }}>
+            <div style={{
+              position: 'absolute', left: 8, top: 8,
+              padding: '3px 7px', borderRadius: 6, fontSize: 10,
+              background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(8px)',
+              fontFamily: 'JetBrains Mono', color: '#fff', letterSpacing: 0.3,
+            }}>
+              <IconRemix size={10} strokeWidth={2} style={{ verticalAlign: -1, marginRight: 4 }} />
+              REMIX
+            </div>
+          </button>
+        )}
+        {hasMedia && compact && (
+          <button onClick={() => onRemixOpen && onRemixOpen(item)} style={{
+            display: 'inline-block', marginTop: 4,
+            width: 56, height: 70, borderRadius: 8, overflow: 'hidden',
+            background: `url(${item.media}) center/cover`,
+            border: '1px solid rgba(255,255,255,0.08)',
+            cursor: 'pointer',
+          }} />
+        )}
+
+        {/* Action row */}
+        <div style={{ display: 'flex', gap: 18, alignItems: 'center', fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>
+          <ThreadAction icon={<IconHeart size={14} />} count={item.stats.likes} />
+          {item.kind === 'remix' && <ThreadAction icon={<IconRemix size={14} />} count={item.stats.remixes} />}
+          {item.stats.comments != null && <ThreadAction icon={<IconChat size={14} />} count={item.stats.comments} />}
+          <ThreadAction icon={<IconShare size={14} />} />
+        </div>
+
+        {/* Replies (expandable) */}
+        {hasReplies && (
+          <button onClick={onToggle} style={{
+            marginTop: 10, fontSize: 12, color: 'rgba(255,255,255,0.5)',
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+          }}>
+            <span style={{ width: 18, height: 1, background: 'rgba(255,255,255,0.18)' }} />
+            {expanded ? 'Hide' : 'View'} {item.replies.length} {item.replies.length === 1 ? 'reply' : 'replies'}
+          </button>
+        )}
+        {expanded && hasReplies && (
+          <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 10, paddingLeft: 4 }}>
+            {item.replies.map(r => (
+              <div key={r.id} style={{ display: 'flex', gap: 8, animation: 'fadeIn .2s ease' }}>
+                <div style={{
+                  width: 22, height: 22, borderRadius: 999, flexShrink: 0,
+                  background: `url(${r.user.avatar}) center/cover, rgba(255,255,255,0.06)`,
+                }} />
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 12 }}>
+                    <span style={{ fontWeight: 600 }}>{r.user.name}</span>
+                    <span style={{ color: 'rgba(255,255,255,0.4)', marginLeft: 6 }}>· {r.time}</span>
+                  </div>
+                  <p style={{ margin: '2px 0 0', fontSize: 12.5, color: 'rgba(255,255,255,0.78)' }}>{r.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ThreadAction({ icon, count }) {
+  const [hover, setHover] = React.useState(false);
+  return (
+    <button
+      onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 5,
+        color: hover ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.5)',
+        transition: 'color .15s', fontVariantNumeric: 'tabular-nums', fontSize: 12,
+      }}>
+      {icon}
+      {count != null && <span>{count}</span>}
+    </button>
+  );
+}
+
+window.Thread = Thread;
+
+
+// === composer.jsx ===
+// Composer — bottom of info panel; Comment ↔ Create toggle
+function Composer({ mode, setMode, value, setValue, onSend }) {
+  const isCreate = mode === 'create';
+  const [focused, setFocused] = React.useState(false);
+  const placeholder = isCreate
+    ? "Write down your idea to remix it..."
+    : "Add a comment...";
+
+  return (
+    <div style={{
+      padding: '10px 16px 16px',
+      borderTop: '1px solid rgba(255,255,255,0.05)',
+      background: 'linear-gradient(to top, rgba(10,10,12,0.88), rgba(10,10,12,0.55))',
+      backdropFilter: 'blur(40px)',
+    }}>
+      <div style={{
+        background: isCreate ? 'rgba(128,212,255,0.05)' : 'rgba(255,255,255,0.04)',
+        border: '1px solid ' + (isCreate ? 'rgba(128,212,255,0.22)' : (focused ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.08)')),
+        borderRadius: 16, transition: 'all .2s ease',
+        padding: '12px 12px 8px',
+      }}>
+        <textarea
+          rows={2}
+          value={value}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          onChange={e => setValue(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onSend(); } }}
+          placeholder={placeholder}
+          style={{
+            width: '100%', fontSize: 13.5, padding: '0 2px', minHeight: 42, maxHeight: 140,
+            color: '#fff', lineHeight: 1.5, display: 'block',
+          }}
+        />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 6 }}>
+          <IconToggle mode={mode} setMode={setMode} />
+          <div style={{ flex: 1 }} />
+          <button onClick={onSend} disabled={!value.trim()} style={{
+            width: 30, height: 30, borderRadius: 999, display: 'grid', placeItems: 'center',
+            background: value.trim() ? (isCreate ? 'rgb(160,222,255)' : '#fff') : 'rgba(255,255,255,0.08)',
+            color: value.trim() ? '#000' : 'rgba(255,255,255,0.4)',
+            transition: 'all .15s',
+          }}>
+            <IconCornerUp size={13} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function IconToggle({ mode, setMode }) {
+  return (
+    <div style={{ display: 'flex', gap: 2, flexShrink: 0 }}>
+      <button onClick={() => setMode('create')} title="Create — send to remix agent" style={{
+        width: 28, height: 28, borderRadius: 8, display: 'grid', placeItems: 'center',
+        background: mode === 'create' ? 'rgba(128,212,255,0.18)' : 'transparent',
+        color: mode === 'create' ? 'rgb(160,222,255)' : 'rgba(255,255,255,0.45)',
+        transition: 'all .15s',
+      }}><IconSparkles size={15} /></button>
+      <button onClick={() => setMode('comment')} title="Comment" style={{
+        width: 28, height: 28, borderRadius: 8, display: 'grid', placeItems: 'center',
+        background: mode === 'comment' ? 'rgba(255,255,255,0.10)' : 'transparent',
+        color: mode === 'comment' ? '#fff' : 'rgba(255,255,255,0.45)',
+        transition: 'all .15s',
+      }}><IconChat size={15} /></button>
+    </div>
+  );
+}
+
+window.Composer = Composer;
+
+
+// === agent.jsx ===
+// Agent panel — replaces info panel when user enters create/remix mode
+function AgentPanel({ onExit, initialPrompt }) {
+  const [messages, setMessages] = React.useState(() => {
+    const seed = [
+      { id: 'm0', role: 'system', text: 'Remixing from "Angel in the elevator portrait"', context: true }
+    ];
+    if (initialPrompt) {
+      seed.push({ id: 'm1', role: 'user', text: initialPrompt });
+      seed.push({ id: 'm2', role: 'agent', text: 'Got it — I\'ll remix this with your direction. Holding the original face reference and dress element. Adjusting wing treatment + lighting.', thinking: false });
+      seed.push({ id: 'm3', role: 'agent', kind: 'plan', steps: [
+        { label: 'Lock face reference', done: true },
+        { label: 'Apply style direction', done: true },
+        { label: 'Generate variations', done: false, active: true },
+      ]});
+    }
+    return seed;
+  });
+  const [input, setInput] = React.useState('');
+  const [generating, setGenerating] = React.useState(initialPrompt ? true : false);
+  const scrollRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [messages]);
+
+  React.useEffect(() => {
+    if (generating) {
+      const t = setTimeout(() => {
+        setMessages(m => [...m, {
+          id: 'g' + Date.now(), role: 'agent', kind: 'gen',
+          variants: [window.__resources['r_remix_2_png'], window.__resources['r_remix_3_png'], window.__resources['r_remix_4_png']]
+        }]);
+        setGenerating(false);
+      }, 2200);
+      return () => clearTimeout(t);
+    }
+  }, [generating]);
+
+  const send = () => {
+    if (!input.trim()) return;
+    setMessages(m => [...m, { id: 'u' + Date.now(), role: 'user', text: input }]);
+    setInput('');
+    setGenerating(true);
+    setTimeout(() => {
+      setMessages(m => [...m, {
+        id: 'a' + Date.now(), role: 'agent',
+        text: 'Iterating on that direction now...'
+      }]);
+    }, 400);
+  };
+
+  return (
+    <aside style={{
+      width: 440, flexShrink: 0, height: '100vh',
+      display: 'flex', flexDirection: 'column',
+      background: 'rgba(8,10,16,0.7)', backdropFilter: 'blur(40px)',
+      borderLeft: '1px solid rgba(128,212,255,0.10)',
+      animation: 'slideUp .25s ease',
+      position: 'relative', zIndex: 4,
+    }}>
+      {/* Header */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '16px 16px 14px', borderBottom: '1px solid rgba(255,255,255,0.05)',
+      }}>
+        <div style={{
+          width: 28, height: 28, borderRadius: 8,
+          background: 'linear-gradient(135deg, rgb(160,222,255), rgb(120,180,255))',
+          display: 'grid', placeItems: 'center', color: '#000',
+        }}>
+          <IconSparkles size={15} />
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 13, fontWeight: 600 }}>Remix Agent</div>
+          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', display: 'flex', alignItems: 'center', gap: 5 }}>
+            {generating ? (
+              <>
+                <span style={{ width: 6, height: 6, borderRadius: 999, background: 'rgb(160,222,255)', animation: 'pulse 1s infinite' }} />
+                Generating...
+              </>
+            ) : (
+              <>
+                <span style={{ width: 6, height: 6, borderRadius: 999, background: '#7CFFA1' }} />
+                Ready
+              </>
+            )}
+          </div>
+        </div>
+        <button onClick={onExit} title="Exit agent" style={{
+          width: 32, height: 32, borderRadius: 8, display: 'grid', placeItems: 'center',
+          color: 'rgba(255,255,255,0.6)', background: 'rgba(255,255,255,0.04)',
+        }}>
+          <IconClose size={16} />
+        </button>
+      </div>
+
+      {/* Messages */}
+      <div ref={scrollRef} style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {messages.map(msg => <Message key={msg.id} msg={msg} />)}
+        {generating && <ThinkingBubble />}
+      </div>
+
+      {/* Input */}
+      <div style={{ padding: '10px 14px 16px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{
+          display: 'flex', alignItems: 'flex-end', gap: 6,
+          background: 'rgba(255,255,255,0.04)',
+          border: '1px solid rgba(128,212,255,0.18)',
+          borderRadius: 16, padding: 6,
+        }}>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 4, padding: '6px 10px',
+            background: 'rgba(128,212,255,0.10)', borderRadius: 999, fontSize: 11,
+            color: 'rgb(160,222,255)', fontFamily: 'JetBrains Mono', flexShrink: 0,
+          }}>
+            <IconSparkles size={11} /> Create
+          </span>
+          <textarea
+            rows={1} value={input} onChange={e => setInput(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
+            placeholder="Refine your remix..."
+            style={{ flex: 1, fontSize: 13, padding: '8px 4px', minHeight: 32, maxHeight: 100, lineHeight: 1.4 }}
+          />
+          <button onClick={send} disabled={!input.trim()} style={{
+            width: 32, height: 32, borderRadius: 999, display: 'grid', placeItems: 'center',
+            background: input.trim() ? 'rgb(160,222,255)' : 'rgba(255,255,255,0.08)',
+            color: input.trim() ? '#000' : 'rgba(255,255,255,0.4)',
+          }}>
+            <IconSend size={13} />
+          </button>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+function Message({ msg }) {
+  if (msg.context) {
+    return (
+      <div style={{
+        fontSize: 11, color: 'rgba(255,255,255,0.4)', textAlign: 'center',
+        fontFamily: 'JetBrains Mono', letterSpacing: 0.3, padding: '4px 0',
+      }}>— {msg.text} —</div>
+    );
+  }
+  if (msg.role === 'user') {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'flex-end', animation: 'fadeIn .2s' }}>
+        <div style={{
+          maxWidth: '82%', padding: '10px 14px', borderRadius: 16,
+          background: 'rgba(255,255,255,0.92)', color: '#000',
+          fontSize: 13.5, lineHeight: 1.45,
+        }}>{msg.text}</div>
+      </div>
+    );
+  }
+  if (msg.kind === 'plan') {
+    return (
+      <div style={{
+        padding: '12px 14px', borderRadius: 14,
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid rgba(255,255,255,0.06)',
+        animation: 'fadeIn .2s',
+      }}>
+        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginBottom: 8, fontFamily: 'JetBrains Mono', letterSpacing: 0.3 }}>PLAN</div>
+        {msg.steps.map((s, i) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0', fontSize: 13 }}>
+            {s.done ? (
+              <span style={{ width: 16, height: 16, borderRadius: 999, background: 'rgba(124,255,161,0.15)', display: 'grid', placeItems: 'center', color: '#7CFFA1' }}>
+                <IconCheck size={10} strokeWidth={2.5} />
+              </span>
+            ) : s.active ? (
+              <span style={{ width: 16, height: 16, borderRadius: 999, border: '2px solid rgba(160,222,255,0.5)', borderTopColor: 'rgb(160,222,255)', animation: 'spin 1s linear infinite' }} />
+            ) : (
+              <span style={{ width: 16, height: 16, borderRadius: 999, border: '1.5px solid rgba(255,255,255,0.15)' }} />
+            )}
+            <span style={{ color: s.done ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.9)' }}>{s.label}</span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  if (msg.kind === 'gen') {
+    return (
+      <div style={{ animation: 'fadeIn .3s' }}>
+        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginBottom: 8, fontFamily: 'JetBrains Mono', letterSpacing: 0.3 }}>VARIATIONS · pick one to continue</div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
+          {msg.variants.map((src, i) => (
+            <button key={i} style={{
+              aspectRatio: '3/4', borderRadius: 10, overflow: 'hidden',
+              background: `url(${src}) center/cover, rgba(255,255,255,0.04)`,
+              border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer',
+              transition: 'all .15s',
+            }} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+  // agent text bubble
+  return (
+    <div style={{ display: 'flex', gap: 8, animation: 'fadeIn .2s' }}>
+      <div style={{
+        width: 22, height: 22, borderRadius: 6, flexShrink: 0,
+        background: 'linear-gradient(135deg, rgb(160,222,255), rgb(120,180,255))',
+        display: 'grid', placeItems: 'center', color: '#000', marginTop: 2,
+      }}>
+        <IconSparkles size={11} />
+      </div>
+      <div style={{
+        flex: 1, padding: '8px 12px', borderRadius: 14,
+        background: 'rgba(255,255,255,0.04)',
+        border: '1px solid rgba(255,255,255,0.06)',
+        fontSize: 13.5, lineHeight: 1.5, color: 'rgba(255,255,255,0.92)',
+      }}>{msg.text}</div>
+    </div>
+  );
+}
+
+function ThinkingBubble() {
+  return (
+    <div style={{ display: 'flex', gap: 8 }}>
+      <div style={{
+        width: 22, height: 22, borderRadius: 6, flexShrink: 0,
+        background: 'linear-gradient(135deg, rgb(160,222,255), rgb(120,180,255))',
+        display: 'grid', placeItems: 'center', color: '#000', marginTop: 2,
+      }}>
+        <IconSparkles size={11} />
+      </div>
+      <div style={{
+        padding: '10px 14px', borderRadius: 14,
+        background: 'rgba(255,255,255,0.04)',
+        border: '1px solid rgba(255,255,255,0.06)',
+        display: 'flex', gap: 4,
+      }}>
+        {[0, 1, 2].map(i => (
+          <span key={i} style={{
+            width: 6, height: 6, borderRadius: 999, background: 'rgb(160,222,255)',
+            animation: `pulse 1.2s ${i * 0.15}s infinite`,
+          }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+window.AgentPanel = AgentPanel;
+
+
+// === element-page.jsx ===
+// Element page — full-screen view with media + element info panel
+function ElementPage({ el, onClose, onRemixOpen, tweaks }) {
+  const [composerMode, setComposerMode] = React.useState('comment');
+  const [composerText, setComposerText] = React.useState('');
+  const [threadExpanded, setThreadExpanded] = React.useState(false);
+
+  const elThread = THREAD.slice(0, 4); // mocked subset for element
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 80, display: 'flex',
+      animation: 'fadeIn .2s ease',
+    }}>
+      <AmbientBg src={el.img} blur={tweaks.blurDepth} intensity={tweaks.ambientIntensity * 0.7} />
+      <Sidebar />
+      {/* Left media area */}
+      <div style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px 24px 32px 0', minWidth: 0 }}>
+        <button onClick={onClose} style={{
+          position: 'absolute', top: 24, left: 16, width: 36, height: 36, borderRadius: 999,
+          display: 'grid', placeItems: 'center',
+          background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255,255,255,0.06)', zIndex: 5,
+        }}><IconArrowLeft size={18} /></button>
+        <div style={{
+          position: 'relative', maxHeight: 'calc(100vh - 80px)', aspectRatio: '720/940',
+          width: 'auto', height: '100%', borderRadius: 22, overflow: 'hidden',
+          background: 'rgba(255,255,255,0.02)',
+          boxShadow: '0 30px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04) inset',
+          display: 'grid', placeItems: 'center', padding: 60,
+        }}>
+          <img src={el.img} alt={el.name} style={{ maxWidth: '70%', maxHeight: '70%', objectFit: 'contain' }} />
+        </div>
+        {/* Action rail (no like) */}
+        <div style={{
+          position: 'absolute', right: 40, bottom: 36, zIndex: 6,
+          display: 'flex', flexDirection: 'column', gap: 18, alignItems: 'center',
+        }}>
+          <ActionBtn icon={<IconRemix size={22} />} label={672} />
+          <ActionBtn icon={<IconBookmark size={22} />} label={1000} />
+          <ActionBtn icon={<IconShare size={22} />} label={4000} />
+        </div>
+      </div>
+
+      {/* Right info panel */}
+      <aside style={{
+        width: 440, flexShrink: 0, height: '100vh',
+        display: 'flex', flexDirection: 'column',
+        background: 'rgba(10,10,12,0.55)', backdropFilter: 'blur(40px)',
+        borderLeft: '1px solid rgba(255,255,255,0.05)',
+        position: 'relative', zIndex: 4,
+      }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '24px 24px 12px' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 16 }}>
+            <h1 style={{ flex: 1, margin: 0, fontSize: 22, fontWeight: 600, letterSpacing: '-0.3px' }}>{el.name}</h1>
+            <button onClick={onClose} style={{
+              width: 28, height: 28, borderRadius: 8, display: 'grid', placeItems: 'center',
+              color: 'rgba(255,255,255,0.6)',
+            }}><IconClose size={16} /></button>
+          </div>
+
+          {/* Description */}
+          <div style={{
+            padding: 14, borderRadius: 14,
+            background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)',
+            marginBottom: 16,
+          }}>
+            <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.55, color: 'rgba(255,255,255,0.82)' }}>
+              Descriptions about this has been shuffled in inspova. For example, Y2K angel wings, soft fluffy white feathers, glowing halo light, dreamy diffusion...
+            </p>
+          </div>
+
+          {/* Used in count */}
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '12px 14px', borderRadius: 12,
+            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
+            marginBottom: 24,
+          }}>
+            <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>Used in <strong style={{ color: '#fff' }}>32</strong> shuffles</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ display: 'flex' }}>
+                {[window.__resources['r_avatar_1_png'], window.__resources['r_avatar_2_png'], window.__resources['r_avatar_4_png'], window.__resources['r_avatar_5_png']].map((a, i) => (
+                  <div key={i} style={{
+                    width: 22, height: 22, borderRadius: 999, marginLeft: i ? -6 : 0,
+                    background: `url(${a}) center/cover, rgba(255,255,255,0.08)`,
+                    border: '1.5px solid rgb(14,14,18)',
+                  }} />
+                ))}
+              </div>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)' }}>+27</span>
+            </div>
+          </div>
+
+          {/* Inspired by this thread */}
+          <Section title="Inspired by this" hint={`${elThread.length}`}>
+            <Thread
+              items={threadExpanded ? elThread : elThread.slice(0, 3)}
+              threadStyle={tweaks.threadStyle}
+              onRemixOpen={onRemixOpen}
+            />
+            {elThread.length > 3 && (
+              <button onClick={() => setThreadExpanded(e => !e)} style={{
+                marginTop: 4, fontSize: 12, color: 'rgba(255,255,255,0.55)',
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                padding: '6px 12px', borderRadius: 999,
+                background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
+              }}>
+                {threadExpanded ? `Show less` : `Show ${elThread.length - 3} more`}
+              </button>
+            )}
+          </Section>
+        </div>
+        <Composer
+          mode={composerMode} setMode={setComposerMode}
+          value={composerText} setValue={setComposerText}
+          onSend={() => setComposerText('')}
+        />
+      </aside>
+    </div>
+  );
+}
+
+// Chat bubble helpers (agent-style conversation)
+function ChatUser({ text }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'flex-end', animation: 'fadeIn .2s ease' }}>
+      <div style={{
+        maxWidth: '82%', padding: '9px 13px', borderRadius: 16,
+        background: 'rgba(255,255,255,0.92)', color: '#000', fontSize: 13.5, lineHeight: 1.45,
+        textWrap: 'pretty',
+      }}>{text}</div>
+    </div>
+  );
+}
+
+function ChatAgent({ children }) {
+  return (
+    <div style={{ display: 'flex', gap: 8, animation: 'fadeIn .25s ease' }}>
+      <div style={{
+        width: 22, height: 22, borderRadius: 6, flexShrink: 0,
+        background: 'linear-gradient(135deg, rgb(160,222,255), rgb(120,180,255))',
+        display: 'grid', placeItems: 'center', color: '#000', marginTop: 2,
+      }}><IconSparkles size={11} /></div>
+      <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
+    </div>
+  );
+}
+
+// Remix History page — when user clicks a remix in thread
+function RemixHistoryPage({ remix, onClose, tweaks }) {
+  const [composerMode, setComposerMode] = React.useState('comment');
+  const [composerText, setComposerText] = React.useState('');
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 80, display: 'flex',
+      animation: 'fadeIn .2s ease',
+    }}>
+      <AmbientBg src={remix.media} blur={tweaks.blurDepth} intensity={tweaks.ambientIntensity * 0.7} />
+      <Sidebar />
+      {/* Left media area */}
+      <div style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px 24px 32px 0', minWidth: 0 }}>
+        <button onClick={onClose} style={{
+          position: 'absolute', top: 24, left: 16, width: 36, height: 36, borderRadius: 999,
+          display: 'grid', placeItems: 'center',
+          background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255,255,255,0.06)', zIndex: 5,
+        }}><IconArrowLeft size={18} /></button>
+        <div style={{
+          position: 'relative', maxHeight: 'calc(100vh - 80px)', aspectRatio: '720/940',
+          width: 'auto', height: '100%', borderRadius: 22, overflow: 'hidden',
+          boxShadow: '0 30px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04) inset',
+        }}>
+          <img src={remix.media} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        </div>
+        <div style={{
+          position: 'absolute', right: 40, bottom: 36, zIndex: 6,
+          display: 'flex', flexDirection: 'column', gap: 18, alignItems: 'center',
+        }}>
+          <ActionBtn icon={<IconRemix size={22} />} label={remix.stats.remixes || 0} />
+          <ActionBtn icon={<IconBookmark size={22} />} label={remix.stats.likes} />
+          <ActionBtn icon={<IconShare size={22} />} label={4000} />
+        </div>
+      </div>
+
+      {/* Right — Remix history chat */}
+      <aside style={{
+        width: 440, flexShrink: 0, height: '100vh',
+        display: 'flex', flexDirection: 'column',
+        background: 'rgba(10,10,12,0.55)', backdropFilter: 'blur(40px)',
+        borderLeft: '1px solid rgba(255,255,255,0.05)',
+        position: 'relative', zIndex: 4,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px 24px 16px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+          <h1 style={{ flex: 1, margin: 0, fontSize: 18, fontWeight: 600 }}>Remix History</h1>
+          <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: 8, display: 'grid', placeItems: 'center', color: 'rgba(255,255,255,0.6)' }}>
+            <IconClose size={16} />
+          </button>
+        </div>
+
+        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px 12px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {/* Header with author */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingBottom: 4 }}>
+            <div style={{
+              width: 36, height: 36, borderRadius: 999,
+              background: `url(${remix.user.avatar}) center/cover, rgba(255,255,255,0.06)`,
+              border: '1px solid rgba(255,255,255,0.1)',
+            }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 13.5, fontWeight: 600 }}>{remix.user.name}'s remix</div>
+              <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.5)', marginTop: 1 }}>{remix.time} · 6 messages</div>
+            </div>
+            <button style={{
+              padding: '6px 12px', borderRadius: 999, fontSize: 11.5,
+              background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.85)',
+              border: '1px solid rgba(255,255,255,0.06)',
+              fontFamily: 'JetBrains Mono', letterSpacing: 0.3,
+            }}>FOLLOW</button>
+          </div>
+
+          {/* Source pin — original */}
+          <div style={{
+            padding: '10px 12px', borderRadius: 12,
+            background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
+            display: 'flex', alignItems: 'center', gap: 10,
+          }}>
+            <div style={{ width: 36, height: 44, borderRadius: 6, background: `url(${HERO.src}) center/cover` }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.5)', fontFamily: 'JetBrains Mono', letterSpacing: 0.3 }}>REMIXED FROM</div>
+              <div style={{ fontSize: 13, fontWeight: 500, marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{HERO.title}</div>
+            </div>
+            <IconArrowRight size={14} style={{ color: 'rgba(255,255,255,0.4)' }} />
+          </div>
+
+          {/* Turn 1 — user msg */}
+          <ChatUser text={remix.text} />
+
+          {/* Turn 1 — agent + initial result */}
+          <ChatAgent>
+            <div style={{
+              padding: '10px 12px', borderRadius: 14, marginBottom: 8,
+              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
+              fontSize: 13, color: 'rgba(255,255,255,0.85)', lineHeight: 1.5,
+            }}>
+              Got it — keeping the face and dress elements, shifting toward your direction. Here's a first pass:
+            </div>
+            <button style={{
+              width: 150, aspectRatio: '3/4', borderRadius: 12, overflow: 'hidden',
+              background: `url(assets/remix-2.png) center/cover`,
+              border: '1px solid rgba(255,255,255,0.08)', display: 'block', cursor: 'pointer',
+            }} />
+          </ChatAgent>
+
+          {/* Turn 2 — user follow-up */}
+          <ChatUser text="Love it. Can you push the lighting more golden hour and soften the wings?" />
+
+          {/* Turn 2 — agent thinking + variations */}
+          <ChatAgent>
+            <div style={{
+              padding: '10px 12px', borderRadius: 14, marginBottom: 8,
+              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
+              fontSize: 13, color: 'rgba(255,255,255,0.85)', lineHeight: 1.5,
+            }}>
+              Warmer rim light, wings dialed back to translucent. Here are 3 variations — pick one to keep iterating:
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
+              {[window.__resources['r_remix_4_png'], window.__resources['r_remix_6_png'], remix.media].map((src, i) => (
+                <button key={i} style={{
+                  aspectRatio: '3/4', borderRadius: 10, overflow: 'hidden', position: 'relative',
+                  background: `url(${src}) center/cover`,
+                  border: i === 2 ? '1.5px solid rgba(160,222,255,0.6)' : '1px solid rgba(255,255,255,0.08)',
+                  cursor: 'pointer',
+                }}>
+                  {i === 2 && (
+                    <div style={{
+                      position: 'absolute', top: 4, right: 4, padding: '2px 6px', borderRadius: 4,
+                      background: 'rgba(160,222,255,0.95)', color: '#000', fontSize: 9,
+                      fontFamily: 'JetBrains Mono', letterSpacing: 0.3, fontWeight: 600,
+                    }}>KEPT</div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </ChatAgent>
+
+          {/* Turn 3 — final */}
+          <ChatUser text="Third one. Final crop please." />
+          <ChatAgent>
+            <div style={{
+              padding: '10px 12px', borderRadius: 14, marginBottom: 8,
+              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
+              fontSize: 13, color: 'rgba(255,255,255,0.85)', lineHeight: 1.5,
+            }}>
+              Final — 3:4 crop, upscaled 4×. Posted to your feed.
+            </div>
+            <button style={{
+              width: 170, aspectRatio: '3/4', borderRadius: 12, overflow: 'hidden',
+              background: `url(${remix.media}) center/cover`,
+              border: '1px solid rgba(255,255,255,0.08)', display: 'block', cursor: 'pointer',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+            }} />
+            <div style={{ display: 'flex', gap: 6, marginTop: 8, fontSize: 11, color: 'rgba(255,255,255,0.5)', fontFamily: 'JetBrains Mono', letterSpacing: 0.3 }}>
+              <span>1024×1365</span><span>·</span><span>SDXL TURBO</span><span>·</span><span>4 STEPS</span>
+            </div>
+          </ChatAgent>
+        </div>
+
+        <Composer
+          mode={composerMode} setMode={setComposerMode}
+          value={composerText} setValue={setComposerText}
+          onSend={() => setComposerText('')}
+        />
+      </aside>
+    </div>
+  );
+}
+
+window.ElementPage = ElementPage;
+window.RemixHistoryPage = RemixHistoryPage;
+
+
+// === tweaks.jsx ===
+// Tweaks panel — exposes thread style, blur depth, composer toggle, media type
+function InspovaTweaks() {
+  const [tweaks, setTweak] = useTweaks(window.TWEAKS);
+  // Mirror to a global so the app reads same source
+  React.useEffect(() => { window.TWEAKS_LIVE = tweaks; window.dispatchEvent(new CustomEvent('tweaks-update', { detail: tweaks })); }, [tweaks]);
+
+  return (
+    <TweaksPanel title="Tweaks">
+      <TweakSection title="Media">
+        <TweakRadio
+          label="Hero type"
+          value={tweaks.mediaType}
+          onChange={(v) => setTweak('mediaType', v)}
+          options={[{ label: 'Image', value: 'image' }, { label: 'Video', value: 'video' }]}
+        />
+      </TweakSection>
+
+      <TweakSection title="Thread visual style">
+        <TweakRadio
+          label="Density"
+          value={tweaks.threadStyle}
+          onChange={(v) => setTweak('threadStyle', v)}
+          options={[
+            { label: 'Compact', value: 'compact' },
+            { label: 'Medium', value: 'medium' },
+            { label: 'Rich', value: 'rich' }
+          ]}
+        />
+      </TweakSection>
+
+      <TweakSection title="Background blur">
+        <TweakSlider
+          label="Ambient blur"
+          value={tweaks.blurDepth}
+          onChange={(v) => setTweak('blurDepth', v)}
+          min={20} max={140} step={4} unit="px"
+        />
+        <TweakSlider
+          label="Ambient intensity"
+          value={tweaks.ambientIntensity}
+          onChange={(v) => setTweak('ambientIntensity', v)}
+          min={0.2} max={1} step={0.05}
+        />
+      </TweakSection>
+
+      <TweakSection title="Composer toggle">
+        <TweakRadio
+          label="Style"
+          value={tweaks.composerToggle}
+          onChange={(v) => setTweak('composerToggle', v)}
+          options={[
+            { label: 'Segmented', value: 'segmented' },
+            { label: 'Single pill', value: 'pill' },
+            { label: 'Icon-only', value: 'icons' }
+          ]}
+        />
+      </TweakSection>
+    </TweaksPanel>
+  );
+}
+
+window.InspovaTweaks = InspovaTweaks;
+
+
+// === app.jsx ===
+// Main app — wires content + info panel + agent transition + ambient bg
+function App() {
+  const [tweaks, setTweaks] = React.useState(window.TWEAKS_LIVE || window.TWEAKS);
+  const [agentMode, setAgentMode] = React.useState(null);
+  const [elementPage, setElementPage] = React.useState(null);
+  const [remixPage, setRemixPage] = React.useState(null);
+
+  React.useEffect(() => {
+    const handler = (e) => setTweaks({ ...e.detail });
+    window.addEventListener('tweaks-update', handler);
+    return () => window.removeEventListener('tweaks-update', handler);
+  }, []);
+
+  return (
+    <div style={{ width: '100vw', height: '100vh', display: 'flex', position: 'relative', overflow: 'hidden' }}>
+      <AmbientBg src={HERO.src} blur={tweaks.blurDepth} intensity={tweaks.ambientIntensity} />
+      <Sidebar />
+      <Content tweaks={tweaks} onRemixClick={() => setAgentMode({ prompt: '' })} agentMode={agentMode} />
+      <InfoPanel
+        tweaks={tweaks}
+        agentMode={agentMode}
+        onEnterAgent={(prompt) => setAgentMode({ prompt })}
+        onExitAgent={() => setAgentMode(null)}
+        onElementClick={(el) => setElementPage(el)}
+        onRemixOpen={(remix) => setRemixPage(remix)}
+      />
+
+      {elementPage && <ElementPage el={elementPage} tweaks={tweaks} onClose={() => setElementPage(null)} onRemixOpen={(r) => setRemixPage(r)} />}
+      {remixPage && <RemixHistoryPage remix={remixPage} tweaks={tweaks} onClose={() => setRemixPage(null)} />}
+
+      <InspovaTweaks />
+    </div>
+  );
+}
+
+function AmbientBg({ src, blur, intensity }) {
+  return (
+    <>
+      <div style={{
+        position: 'absolute', inset: '-10%', zIndex: 0,
+        backgroundImage: `url(${src})`, backgroundSize: 'cover', backgroundPosition: 'center',
+        filter: `blur(${blur}px) saturate(1.2)`,
+        opacity: intensity,
+        transform: 'scale(1.2)',
+      }} />
+      <div style={{
+        position: 'absolute', inset: 0, zIndex: 1,
+        background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.85) 90%)',
+      }} />
+      {/* Grain */}
+      <div style={{
+        position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none', opacity: 0.04,
+        backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27200%27 height=%27200%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence baseFrequency=%270.9%27/%3E%3C/filter%3E%3Crect width=%27200%27 height=%27200%27 filter=%27url(%23n)%27/%3E%3C/svg%3E")',
+      }} />
+    </>
+  );
+}
+
+window.AmbientBg = AmbientBg;
+function ElementDetailModal({ el, onClose }) {
+  return (
+    <div onClick={onClose} style={{
+      position: 'fixed', inset: 0, zIndex: 100,
+      background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(20px)',
+      display: 'grid', placeItems: 'center', animation: 'fadeIn .2s',
+    }}>
+      <div onClick={e => e.stopPropagation()} style={{
+        width: 480, maxWidth: '90vw', borderRadius: 20,
+        background: 'rgba(20,20,24,0.95)', border: '1px solid rgba(255,255,255,0.08)',
+        padding: 28, animation: 'slideUp .25s',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
+          <div style={{
+            width: 96, height: 96, borderRadius: 14, flexShrink: 0,
+            background: `url(${el.img}) center/cover, rgba(255,255,255,0.05)`,
+            border: '1px solid rgba(255,255,255,0.08)',
+          }} />
+          <div>
+            <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono', color: 'rgba(255,255,255,0.5)', letterSpacing: 0.4, marginBottom: 4 }}>{el.type.toUpperCase()}</div>
+            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 600 }}>{el.name}</h2>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', marginTop: 6 }}>Used in 248 remixes · 3 collections</div>
+          </div>
+        </div>
+        <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.75)', lineHeight: 1.6, margin: '0 0 20px' }}>
+          A reusable element. Drop into the composer to apply to your next remix, or open the full detail page to see other works that built on it.
+        </p>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button style={{
+            flex: 1, padding: '11px 16px', borderRadius: 12, fontSize: 13, fontWeight: 600,
+            background: '#fff', color: '#000',
+          }}>Use in remix</button>
+          <button style={{
+            padding: '11px 16px', borderRadius: 12, fontSize: 13, fontWeight: 500,
+            background: 'rgba(255,255,255,0.08)', color: '#fff',
+            border: '1px solid rgba(255,255,255,0.08)',
+          }}>Save to assets</button>
+          <button onClick={onClose} style={{
+            padding: '11px 14px', borderRadius: 12,
+            background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.7)',
+          }}><IconClose size={16} /></button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+
+</script>
+
+</body>
+</html>
