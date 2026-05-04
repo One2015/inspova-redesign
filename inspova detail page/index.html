@@ -657,6 +657,13 @@ const THREAD = [
 
 Object.assign(window, { HERO, THREAD });
 
+function fmtN(n) {
+  if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+  return n;
+}
+window.fmtN = fmtN;
+
 
 // === sidebar.jsx ===
 // Left navigation rail
@@ -676,7 +683,7 @@ function Sidebar() {
       <div style={{ flex: 1 }} />
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 22, marginBottom: 'auto', marginTop: 'auto' }}>
-        <NavBtn icon={<IconHome size={20} />} />
+        <NavBtn icon={<IconHome size={20} />} active />
         <NavBtn icon={<IconEdit size={20} />} />
         <NavBtn icon={<IconBookmark size={20} />} />
       </div>
@@ -714,8 +721,7 @@ window.Sidebar = Sidebar;
 
 // === content.jsx ===
 // Left content area: hero media + action rail
-function Content({ tweaks, onRemixClick, agentMode }) {
-  const [saved, setSaved] = React.useState(false);
+function Content({ tweaks, agentMode }) {
   const [following, setFollowing] = React.useState(false);
 
   const isVideo = tweaks.mediaType === "video";
@@ -782,6 +788,7 @@ function Content({ tweaks, onRemixClick, agentMode }) {
         aspectRatio: '720/940', width: 'auto', height: '100%',
         borderRadius: 22, overflow: 'hidden',
         boxShadow: '0 30px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04) inset',
+        animation: 'fadeIn .5s ease',
       }}>
         <img src={HERO.src} alt="" style={{
           width: '100%', height: '100%', objectFit: 'cover', display: 'block',
@@ -814,13 +821,6 @@ function Content({ tweaks, onRemixClick, agentMode }) {
         )}
       </div>
 
-      {/* Action rail — overlaid on right edge of hero */}
-      {!agentMode && (
-        <ActionRail
-          saved={saved} onSave={() => setSaved(s => !s)}
-          onRemix={onRemixClick}
-        />
-      )}
     </div>
   );
 }
@@ -831,37 +831,120 @@ function ActionRail({ saved, onSave, onRemix }) {
       position: 'absolute', right: 40, bottom: 36, zIndex: 6,
       display: 'flex', flexDirection: 'column', gap: 18, alignItems: 'center',
     }}>
-      <ActionBtn onClick={onRemix} icon={<IconRemix size={22} />} label={HERO.stats.remixes} />
-      <ActionBtn onClick={onSave} icon={saved ? <IconBookmarkFilled size={22} /> : <IconBookmark size={22} />} label={(HERO.stats.saves + (saved?1:0)).toLocaleString()} />
-      <ActionBtn icon={<IconShare size={22} />} label={HERO.stats.shares.toLocaleString()} />
+      <ActionBtn onClick={onRemix} icon={<IconRemix size={22} />} label={fmtN(HERO.stats.remixes)} />
+      <ActionBtn onClick={onSave} icon={saved ? <IconBookmarkFilled size={22} /> : <IconBookmark size={22} />} label={fmtN(HERO.stats.saves + (saved ? 1 : 0))} />
+      <ActionBtn icon={<IconShare size={22} />} label={fmtN(HERO.stats.shares)} />
     </div>
   );
 }
 
 function ActionBtn({ icon, label, onClick }) {
   const [hover, setHover] = React.useState(false);
+  const [pressed, setPressed] = React.useState(false);
   return (
-    <button onClick={onClick} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+    <button onClick={onClick}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => { setHover(false); setPressed(false); }}
+      onPointerDown={() => setPressed(true)}
+      onPointerUp={() => setPressed(false)}
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
       <div style={{
         width: 48, height: 48, borderRadius: 999, display: 'grid', placeItems: 'center',
-        background: hover ? 'rgba(0,0,0,0.7)' : 'rgba(0,0,0,0.5)',
+        background: hover ? 'rgba(0,0,0,0.72)' : 'rgba(0,0,0,0.5)',
         backdropFilter: 'blur(16px)',
         border: '1px solid rgba(255,255,255,0.08)',
         color: '#fff',
-        transform: hover ? 'scale(1.05)' : 'scale(1)',
-        transition: 'all .15s ease',
+        transform: pressed ? 'scale(0.88)' : hover ? 'scale(1.08)' : 'scale(1)',
+        transition: pressed ? 'transform .08s ease' : 'all .2s cubic-bezier(0.34,1.56,0.64,1)',
       }}>
         {icon}
       </div>
       <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.85)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
-        {typeof label === 'number' ? label.toLocaleString() : label}
+        {label}
       </span>
     </button>
   );
 }
 
 window.Content = Content;
+
+
+// === bottom-action-bar.jsx ===
+function BottomActionBar({ onRemix }) {
+  const [saved, setSaved] = React.useState(false);
+  const [hoverRemix, setHoverRemix] = React.useState(false);
+  const [hoverSave, setHoverSave] = React.useState(false);
+  const [hoverShare, setHoverShare] = React.useState(false);
+
+  return (
+    <div style={{
+      padding: '14px 24px 28px',
+      borderTop: '1px solid rgba(255,255,255,0.06)',
+      background: 'linear-gradient(to top, rgba(6,6,8,0.98) 55%, rgba(10,10,12,0) 100%)',
+      backdropFilter: 'blur(24px)',
+      display: 'flex', gap: 8, alignItems: 'center',
+    }}>
+      {/* Save — icon + count */}
+      <button
+        onClick={() => setSaved(s => !s)}
+        onMouseEnter={() => setHoverSave(true)}
+        onMouseLeave={() => setHoverSave(false)}
+        style={{
+          height: 50, padding: '0 16px', borderRadius: 14, flexShrink: 0,
+          display: 'flex', alignItems: 'center', gap: 7,
+          background: saved ? 'rgba(255,255,255,0.14)' : (hoverSave ? 'rgba(255,255,255,0.09)' : 'rgba(255,255,255,0.06)'),
+          border: '1px solid ' + (saved ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.08)'),
+          color: saved ? '#fff' : 'rgba(255,255,255,0.65)',
+          transition: 'all .15s',
+        }}>
+        {saved ? <IconBookmarkFilled size={19} /> : <IconBookmark size={19} />}
+        <span style={{ fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
+          {fmtN(HERO.stats.saves + (saved ? 1 : 0))}
+        </span>
+      </button>
+
+      {/* Share — icon + count */}
+      <button
+        onMouseEnter={() => setHoverShare(true)}
+        onMouseLeave={() => setHoverShare(false)}
+        style={{
+          height: 50, padding: '0 16px', borderRadius: 14, flexShrink: 0,
+          display: 'flex', alignItems: 'center', gap: 7,
+          background: hoverShare ? 'rgba(255,255,255,0.09)' : 'rgba(255,255,255,0.06)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          color: 'rgba(255,255,255,0.65)',
+          transition: 'all .15s',
+        }}>
+        <IconShare size={19} />
+        <span style={{ fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
+          {fmtN(HERO.stats.shares)}
+        </span>
+      </button>
+
+      {/* Remix CTA */}
+      <button
+        onClick={onRemix}
+        onMouseEnter={() => setHoverRemix(true)}
+        onMouseLeave={() => setHoverRemix(false)}
+        style={{
+          flex: 1, height: 50, borderRadius: 14,
+          background: hoverRemix ? 'rgba(225,243,255,0.97)' : '#fff',
+          color: '#000',
+          fontSize: 14, fontWeight: 650,
+          letterSpacing: '-0.1px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+          border: 'none',
+          transition: 'background .15s, transform .12s cubic-bezier(0.34,1.56,0.64,1)',
+          transform: hoverRemix ? 'scale(1.01)' : 'scale(1)',
+        }}>
+        <IconRemix size={16} strokeWidth={2} />
+        Remix
+      </button>
+    </div>
+  );
+}
+
+window.BottomActionBar = BottomActionBar;
 
 
 // === info-panel.jsx ===
@@ -871,8 +954,6 @@ function InfoPanel({ tweaks, agentMode, onEnterAgent, onExitAgent, onElementClic
   const [savedEls, setSavedEls] = React.useState({});
   const [promptExpanded, setPromptExpanded] = React.useState(false);
   const [threadExpanded, setThreadExpanded] = React.useState(false);
-  const [composerMode, setComposerMode] = React.useState('comment'); // 'comment' | 'create'
-  const [composerText, setComposerText] = React.useState('');
   const promptRef = React.useRef(null);
   const [promptOverflow, setPromptOverflow] = React.useState(false);
 
@@ -888,24 +969,13 @@ function InfoPanel({ tweaks, agentMode, onEnterAgent, onExitAgent, onElementClic
     setSavedEls(s => ({ ...s, [id]: !s[id] }));
   };
 
-  const handleSend = () => {
-    if (!composerText.trim()) return;
-    if (composerMode === 'create') {
-      onEnterAgent(composerText);
-      setComposerText('');
-    } else {
-      // would post comment in real app
-      setComposerText('');
-    }
-  };
-
   if (agentMode) {
     return <AgentPanel onExit={onExitAgent} initialPrompt={agentMode.prompt} />;
   }
 
   return (
     <aside style={{
-      width: 440, flexShrink: 0, height: '100vh',
+      width: 520, flexShrink: 0, height: '100vh',
       display: 'flex', flexDirection: 'column',
       background: 'rgba(10,10,12,0.55)',
       backdropFilter: 'blur(40px)',
@@ -913,12 +983,12 @@ function InfoPanel({ tweaks, agentMode, onEnterAgent, onExitAgent, onElementClic
       position: 'relative', zIndex: 4,
     }}>
       {/* Scroll content */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '28px 24px 12px' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '36px 28px 16px' }}>
         {/* Title */}
         <h1 style={{
-          fontSize: 20, fontWeight: 600, margin: '0 0 6px', letterSpacing: '-0.3px',
+          fontSize: 22, fontWeight: 600, margin: '0 0 8px', letterSpacing: '-0.4px', lineHeight: 1.25,
         }}>{HERO.title}</h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 24, fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 28, fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>
           <span>Remixed from</span>
           <span style={{
             padding: '2px 8px', borderRadius: 999, background: 'rgba(255,255,255,0.08)',
@@ -928,7 +998,7 @@ function InfoPanel({ tweaks, agentMode, onEnterAgent, onExitAgent, onElementClic
 
         {/* Elements */}
         <Section title="Elements" hint={`${HERO.elements.length}`}>
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
             {HERO.elements.map(el => (
               <ElementChip key={el.id}
                 el={el}
@@ -946,12 +1016,12 @@ function InfoPanel({ tweaks, agentMode, onEnterAgent, onExitAgent, onElementClic
         {/* Prompt */}
         <Section title="Prompt">
           <div style={{
-            padding: 14, borderRadius: 14,
+            padding: 16, borderRadius: 14,
             background: 'rgba(255,255,255,0.03)',
             border: '1px solid rgba(255,255,255,0.05)',
           }}>
             <p ref={promptRef} style={{
-              margin: 0, fontSize: 13.5, lineHeight: 1.55, color: 'rgba(255,255,255,0.82)',
+              margin: 0, fontSize: 14, lineHeight: 1.6, color: 'rgba(255,255,255,0.82)',
               textWrap: 'pretty',
               display: '-webkit-box', WebkitBoxOrient: 'vertical',
               WebkitLineClamp: promptExpanded ? 'unset' : 2,
@@ -1004,22 +1074,17 @@ function InfoPanel({ tweaks, agentMode, onEnterAgent, onExitAgent, onElementClic
         </Section>
       </div>
 
-      {/* Composer pinned to bottom */}
-      <Composer
-        mode={composerMode} setMode={setComposerMode}
-        value={composerText} setValue={setComposerText}
-        onSend={handleSend} toggleStyle={tweaks.composerToggle}
-      />
+      <BottomActionBar onRemix={() => onEnterAgent('')} />
     </aside>
   );
 }
 
 function Section({ title, hint, children }) {
   return (
-    <div style={{ marginBottom: 24 }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 12 }}>
-        <h3 style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.95)', margin: 0, letterSpacing: 0.2 }}>{title}</h3>
-        {hint && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontVariantNumeric: 'tabular-nums' }}>{hint}</span>}
+    <div style={{ marginBottom: 32 }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 14 }}>
+        <h3 style={{ fontSize: 13.5, fontWeight: 600, color: 'rgba(255,255,255,0.95)', margin: 0, letterSpacing: 0.1 }}>{title}</h3>
+        {hint && <span style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.38)', fontVariantNumeric: 'tabular-nums' }}>{hint}</span>}
       </div>
       {children}
     </div>
@@ -1033,10 +1098,10 @@ function ElementChip({ el, hovered, saved, onHover, onLeave, onSave, onClick }) 
       onMouseLeave={onLeave}
       onClick={onClick}
       style={{
-        position: 'relative', width: 100, cursor: 'pointer',
+        position: 'relative', width: 108, cursor: 'pointer',
       }}>
       <div style={{
-        width: 100, height: 100, borderRadius: 16, overflow: 'hidden',
+        width: 108, height: 108, borderRadius: 18, overflow: 'hidden',
         background: 'rgba(255,255,255,0.05)',
         border: '1px solid ' + (hovered ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.06)'),
         transition: 'all .15s ease',
@@ -1081,6 +1146,7 @@ function Thread({ items, threadStyle, onRemixOpen }) {
       {items.map((item, i) => (
         <ThreadItem
           key={item.id} item={item}
+          index={i}
           isLast={i === items.length - 1}
           threadStyle={threadStyle}
           expanded={expanded[item.id]}
@@ -1092,7 +1158,7 @@ function Thread({ items, threadStyle, onRemixOpen }) {
   );
 }
 
-function ThreadItem({ item, isLast, threadStyle, expanded, onToggle, onRemixOpen }) {
+function ThreadItem({ item, index, isLast, threadStyle, expanded, onToggle, onRemixOpen }) {
   const compact = threadStyle === 'compact';
   const rich = threadStyle === 'rich';
   const avatarSize = compact ? 26 : 32;
@@ -1102,7 +1168,7 @@ function ThreadItem({ item, isLast, threadStyle, expanded, onToggle, onRemixOpen
   const hasReplies = item.replies && item.replies.length > 0;
 
   return (
-    <div style={{ position: 'relative', display: 'flex', gap: 12, paddingBottom: isLast ? 8 : 18 }}>
+    <div style={{ position: 'relative', display: 'flex', gap: 12, paddingBottom: isLast ? 8 : 18, animation: `fadeIn .3s ${(index || 0) * 0.06}s both` }}>
       {/* Avatar + thread line column */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
         <div style={{
@@ -1134,24 +1200,13 @@ function ThreadItem({ item, isLast, threadStyle, expanded, onToggle, onRemixOpen
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 3 }}>
           <span style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>{item.user.name}</span>
-          {item.kind === 'remix' && (
-            <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: 3,
-              fontSize: 10, padding: '1px 6px', borderRadius: 999,
-              background: 'rgba(128,212,255,0.10)', color: 'rgb(150,215,255)',
-              border: '1px solid rgba(128,212,255,0.18)',
-              fontFamily: 'JetBrains Mono', letterSpacing: 0.2,
-            }}>
-              <IconRemix size={10} strokeWidth={2} /> remix
-            </span>
-          )}
           <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>· {item.time}</span>
         </div>
 
         {/* Text */}
         <p style={{
-          margin: 0, fontSize: 13.5, lineHeight: 1.45, color: 'rgba(255,255,255,0.85)',
-          textWrap: 'pretty', marginBottom: hasMedia ? 8 : 6,
+          margin: 0, fontSize: 14, lineHeight: 1.5, color: 'rgba(255,255,255,0.85)',
+          textWrap: 'pretty', marginBottom: hasMedia ? 10 : 8,
         }}>{item.text}</p>
 
         {/* Remix media preview — opens remix history (agent-style chat) */}
@@ -1188,7 +1243,7 @@ function ThreadItem({ item, isLast, threadStyle, expanded, onToggle, onRemixOpen
 
         {/* Action row */}
         <div style={{ display: 'flex', gap: 18, alignItems: 'center', fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>
-          <ThreadAction icon={<IconHeart size={14} />} count={item.stats.likes} />
+          <ThreadAction icon={<IconHeart size={14} />} count={item.stats.likes} likeable />
           {item.kind === 'remix' && <ThreadAction icon={<IconRemix size={14} />} count={item.stats.remixes} />}
           {item.stats.comments != null && <ThreadAction icon={<IconChat size={14} />} count={item.stats.comments} />}
           <ThreadAction icon={<IconShare size={14} />} />
@@ -1228,18 +1283,32 @@ function ThreadItem({ item, isLast, threadStyle, expanded, onToggle, onRemixOpen
   );
 }
 
-function ThreadAction({ icon, count }) {
+function ThreadAction({ icon, count, likeable }) {
+  const [liked, setLiked] = React.useState(false);
+  const [bump, setBump] = React.useState(false);
   const [hover, setHover] = React.useState(false);
+
+  const handleClick = () => {
+    if (!likeable) return;
+    setLiked(l => !l);
+    setBump(true);
+    setTimeout(() => setBump(false), 260);
+  };
+
+  const displayCount = count != null ? count + (liked ? 1 : 0) : null;
+
   return (
-    <button
+    <button onClick={handleClick}
       onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
       style={{
         display: 'inline-flex', alignItems: 'center', gap: 5,
-        color: hover ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.5)',
-        transition: 'color .15s', fontVariantNumeric: 'tabular-nums', fontSize: 12,
+        color: liked ? 'rgb(255,85,85)' : hover ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.5)',
+        transition: 'color .15s, transform .15s cubic-bezier(0.34,1.56,0.64,1)',
+        transform: bump ? 'scale(1.35)' : 'scale(1)',
+        fontVariantNumeric: 'tabular-nums', fontSize: 12,
       }}>
-      {icon}
-      {count != null && <span>{count}</span>}
+      {likeable ? (liked ? <IconHeartFilled size={14} /> : icon) : icon}
+      {displayCount != null && <span>{displayCount}</span>}
     </button>
   );
 }
@@ -1258,7 +1327,7 @@ function Composer({ mode, setMode, value, setValue, onSend }) {
 
   return (
     <div style={{
-      padding: '10px 16px 16px',
+      padding: '12px 20px 22px',
       borderTop: '1px solid rgba(255,255,255,0.05)',
       background: 'linear-gradient(to top, rgba(10,10,12,0.88), rgba(10,10,12,0.55))',
       backdropFilter: 'blur(40px)',
@@ -1270,16 +1339,17 @@ function Composer({ mode, setMode, value, setValue, onSend }) {
         padding: '12px 12px 8px',
       }}>
         <textarea
-          rows={2}
+          rows={1}
           value={value}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           onChange={e => setValue(e.target.value)}
+          onInput={e => { e.target.style.height = 'auto'; e.target.style.height = Math.min(e.target.scrollHeight, 140) + 'px'; }}
           onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onSend(); } }}
           placeholder={placeholder}
           style={{
-            width: '100%', fontSize: 13.5, padding: '0 2px', minHeight: 42, maxHeight: 140,
-            color: '#fff', lineHeight: 1.5, display: 'block',
+            width: '100%', fontSize: 13.5, padding: '0 2px', minHeight: 38, maxHeight: 140,
+            color: '#fff', lineHeight: 1.5, display: 'block', overflowY: 'hidden',
           }}
         />
         <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 6 }}>
@@ -1375,7 +1445,7 @@ function AgentPanel({ onExit, initialPrompt }) {
 
   return (
     <aside style={{
-      width: 440, flexShrink: 0, height: '100vh',
+      width: 520, flexShrink: 0, height: '100vh',
       display: 'flex', flexDirection: 'column',
       background: 'rgba(8,10,16,0.7)', backdropFilter: 'blur(40px)',
       borderLeft: '1px solid rgba(128,212,255,0.10)',
@@ -1618,13 +1688,13 @@ function ElementPage({ el, onClose, onRemixOpen, tweaks }) {
 
       {/* Right info panel */}
       <aside style={{
-        width: 440, flexShrink: 0, height: '100vh',
+        width: 520, flexShrink: 0, height: '100vh',
         display: 'flex', flexDirection: 'column',
         background: 'rgba(10,10,12,0.55)', backdropFilter: 'blur(40px)',
         borderLeft: '1px solid rgba(255,255,255,0.05)',
         position: 'relative', zIndex: 4,
       }}>
-        <div style={{ flex: 1, overflowY: 'auto', padding: '24px 24px 12px' }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '28px 28px 16px' }}>
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 16 }}>
             <h1 style={{ flex: 1, margin: 0, fontSize: 22, fontWeight: 600, letterSpacing: '-0.3px' }}>{el.name}</h1>
@@ -1761,20 +1831,20 @@ function RemixHistoryPage({ remix, onClose, tweaks }) {
 
       {/* Right — Remix history chat */}
       <aside style={{
-        width: 440, flexShrink: 0, height: '100vh',
+        width: 520, flexShrink: 0, height: '100vh',
         display: 'flex', flexDirection: 'column',
         background: 'rgba(10,10,12,0.55)', backdropFilter: 'blur(40px)',
         borderLeft: '1px solid rgba(255,255,255,0.05)',
         position: 'relative', zIndex: 4,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px 24px 16px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px 28px 16px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
           <h1 style={{ flex: 1, margin: 0, fontSize: 18, fontWeight: 600 }}>Remix History</h1>
           <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: 8, display: 'grid', placeItems: 'center', color: 'rgba(255,255,255,0.6)' }}>
             <IconClose size={16} />
           </button>
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px 12px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '20px 28px 16px', display: 'flex', flexDirection: 'column', gap: 16 }}>
           {/* Header with author */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingBottom: 4 }}>
             <div style={{
@@ -1978,7 +2048,7 @@ function App() {
     <div style={{ width: '100vw', height: '100vh', display: 'flex', position: 'relative', overflow: 'hidden' }}>
       <AmbientBg src={HERO.src} blur={tweaks.blurDepth} intensity={tweaks.ambientIntensity} />
       <Sidebar />
-      <Content tweaks={tweaks} onRemixClick={() => setAgentMode({ prompt: '' })} agentMode={agentMode} />
+      <Content tweaks={tweaks} agentMode={agentMode} />
       <InfoPanel
         tweaks={tweaks}
         agentMode={agentMode}
